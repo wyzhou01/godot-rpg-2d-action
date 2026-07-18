@@ -58,7 +58,7 @@ var animation_player: NodePath = NodePath() setget set_animation_player
 # INIT
 #
 func _ready() -> void:
-	if Engine.is_editor_hint() and not is_connected("renamed", self, "_on_StateAnimation_renamed"):
+	if Engine.is_editor_hint() and not is_connected("renamed"):
 		var _conn = self.renamed.connect(self._on_StateAnimation_renamed)
 	
 	set_anim_on_enter(anim_on_enter)
