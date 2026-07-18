@@ -1,4 +1,3 @@
-class_name SceneManager extends Node
 ## 场景管理器（autoload）
 ##
 ## 职责:

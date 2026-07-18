@@ -1,4 +1,3 @@
-class_name DialogueHelper extends Node
 ## Dialogic 集成辅助（autoload）
 ##
 ## 用法:

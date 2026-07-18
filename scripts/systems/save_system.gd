@@ -1,4 +1,3 @@
-class_name SaveSystem extends Node
 ## 存档系统（autoload）
 ##
 ## 提供 3 个手动存档位 + 1 个自动存档位

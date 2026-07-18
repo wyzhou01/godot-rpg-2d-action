@@ -1,4 +1,3 @@
-class_name GameState extends Node
 ## 全局游戏状态（autoload）
 ##
 ## 职责:
