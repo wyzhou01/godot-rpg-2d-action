@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="PlayerStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/player_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+max_hp = 100
+max_fp = 50
+attack_power = 10
+defense = 5
+move_speed = 220.0
+jump_velocity = -480.0
+dash_speed = 480.0
+dash_duration = 0.2
+dash_cooldown = 1.0
+dash_iframe_duration = 0.2
+attack_combo_window = 0.15
+attack_range = 80.0
+shield_parry_window = 0.3
+war_cry_radius = 100.0
+war_cry_fp_cost = 15
+war_cry_cooldown = 8.0
+war_cry_iframe_duration = 0.5
+heal_percent = 0.3
+heal_fp_cost = 20

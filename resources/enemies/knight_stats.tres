@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/enemy_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+max_hp = 12
+attack_power = 3
+defense = 1
+move_speed = 90.0
+detection_range = 400.0
+attack_range = 80.0
+attack_cooldown = 1.0
+is_ranged = false
+block_chance = 0.2
