@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/PauseMenu.gd" id="1_pause"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+layer = 50
+script = ExtResource("1_pause")
+
+[node name="Overlay" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0.7)
+mouse_filter = 0
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 440.0
+offset_top = 180.0
+offset_right = 840.0
+offset_bottom = 540.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+text = "PAUSED"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+
+[node name="Spacer1" type="Control" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+
+[node name="ResumeButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Resume (Esc)"
+
+[node name="RestartButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Restart Chapter"
+
+[node name="QuitButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Quit to Main Menu"

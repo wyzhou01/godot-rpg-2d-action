@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scenes/levels/chapter_1/chapter_1.gd" id="2_level"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="8_hud"]
 [ext_resource type="Script" path="res://scripts/core/CameraFollow2D.gd" id="9_cam"]
 [ext_resource type="TileSet" path="res://resources/tilesets/chapter_1_tileset.tres" id="10_tileset"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="11_pause"]
 
 [sub_resource type="RectangleShape2D" id="Ground_shape"]
 size = Vector2(1280, 64)
@@ -99,3 +100,5 @@ zoom = Vector2(1, 1)
 script = ExtResource("9_cam")
 
 [node name="HUD" parent="." instance=ExtResource("8_hud")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("11_pause")]
