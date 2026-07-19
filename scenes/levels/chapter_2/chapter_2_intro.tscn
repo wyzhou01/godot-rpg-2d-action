@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scenes/levels/chapter_2/chapter_2.gd" id="2_level"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/Fragment.tscn" id="7_fragment"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="8_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="9_pause"]
+[ext_resource type="PackedScene" path="res://scenes/objects/Checkpoint.tscn" id="12_checkpoint"]
 [ext_resource type="Script" path="res://scripts/core/CameraFollow2D.gd" id="10_cam"]
 [ext_resource type="TileSet" path="res://resources/tilesets/chapter_2_tileset.tres" id="11_tileset"]
 
@@ -102,3 +103,6 @@ script = ExtResource("10_cam")
 [node name="HUD" parent="." instance=ExtResource("8_hud")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("9_pause")]
+
+[node name="Checkpoint1" parent="." instance=ExtResource("12_checkpoint")]
+position = Vector2(400, 568)

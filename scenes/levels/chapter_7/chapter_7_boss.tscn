@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scenes/levels/chapter_7/chapter_7.gd" id="2_level"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/bosses/onyx.tscn" id="41_onyx"]
 
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="50_pause"]
+[ext_resource type="PackedScene" path="res://scenes/ui/end_screen.tscn" id="51_end"]
 
 [sub_resource type="RectangleShape2D" id="Ground_shape"]
 size = Vector2(1280, 64)
@@ -73,3 +74,4 @@ size = Vector2(60, 100)
 [node name="MusicStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="PauseMenu" parent="." instance=ExtResource("50_pause")]
+[node name="EndScreen" parent="." instance=ExtResource("51_end")]

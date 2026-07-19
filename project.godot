@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 GameState="*res://scripts/systems/game_state.gd"
 SaveSystem="*res://scripts/systems/save_system.gd"
 PlayerData="*res://scripts/core/PlayerData.gd"
+BalanceConfig="*res://scripts/core/balance_config.gd"
 DialogueHelper="*res://scripts/systems/dialogue_helper.gd"
 SceneManager="*res://scripts/systems/scene_manager.gd"
 AppConfig="*res://addons/maaacks_game_template/base/nodes/autoloads/app_config/app_config.tscn"

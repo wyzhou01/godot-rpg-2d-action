@@ -67,7 +67,7 @@ func _on_boss_defeated() -> void:
 	_enable_portal()
 	# 弹对话
 	if DialogueHelper:
-		DialogueHelper.show("res://dialogs/chapter_1_boss_defeat.json")
+		DialogueHelper.show("res://dialogs/chapter_7_boss_defeat.json")
 
 
 func _disable_portal() -> void:

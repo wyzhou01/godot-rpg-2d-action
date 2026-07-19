@@ -13,6 +13,7 @@ extends Node2D
 
 var player: Node = null
 var boss_killed: bool = false
+var _tutorial_shown: bool = false
 
 
 func _ready() -> void:
@@ -42,7 +43,12 @@ var _boss: Node = null
 
 
 func _on_intro_dialog_ended(_timeline: String) -> void:
-	pass
+	# Ch1 第一次：显示教学提示
+	if not _tutorial_shown:
+		_tutorial_shown = true
+		var hint = find_child("TutorialHint", true, false)
+		if hint and hint.has_method("show_hint"):
+			hint.show_hint("WASD/方向键 = 移动  ·  SPACE = 跳跃  ·  J = 攻击  ·  K = 闪避\nEsc = 暂停", 6.0)
 
 
 func _on_player_died() -> void:
