@@ -1,0 +1,31 @@
+# Godot
+.godot/
+.import/
+*.translation
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# System/tool-specific ignores
+.DS_Store
+Thumbs.db
+
+# .NET / Rider
+.idea/
+.vs/
+
+# Audio/Video temp
+*.tmp
+*.bak
+
+# Don't ignore resource folders (we need to commit images, sprite_frames, etc)
+# assets/
+# audio/
+# Original asset downloads (keep extracted assets/ but skip downloads)
+assets/_downloads/
+*.zip

@@ -1,0 +1,19 @@
+{
+  "lines": [
+    {
+      "character": "Rotlord",
+      "text": "我的军团... 崩塌了...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Player",
+      "text": "腐骨... 你的灵魂终于能安息了。",
+      "expression": "normal"
+    },
+    {
+      "character": "Rotlord",
+      "text": "第三块碎片... 我用千年守护它... 现在给你了。",
+      "expression": "sad"
+    }
+  ]
+}

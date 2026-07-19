@@ -1,0 +1,44 @@
+{
+  "lines": [
+    {
+      "character": "Greyr1",
+      "text": "不可能... 我曾是圣剑骑士团的斥候长...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Greyr1",
+      "text": "千年之心... 原来是这样运作的...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Greyr1",
+      "text": "拿走它吧... 但记住... 你会付出代价...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Player",
+      "text": "我不想战斗... 但我不能看着王国毁灭。",
+      "expression": "sad"
+    },
+    {
+      "character": "Player",
+      "text": "我会记住你，斥候长。",
+      "expression": "sad"
+    },
+    {
+      "character": "Greyr1",
+      "text": "第一块碎片... 我从圣殿偷走它是为了阻止内斗...",
+      "expression": "sad"
+    },
+    {
+      "character": "Greyr1",
+      "text": "但一切都失控了... 也许你做得比我好...",
+      "expression": "sad"
+    },
+    {
+      "character": "Greyr1",
+      "text": "去吧。还有 6 块碎片。",
+      "expression": "normal"
+    }
+  ]
+}

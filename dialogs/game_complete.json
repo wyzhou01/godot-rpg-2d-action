@@ -1,0 +1,39 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "七块碎片... 终于集齐了...",
+      "expression": "normal"
+    },
+    {
+      "character": "Player",
+      "text": "「千年之心」... 我看到了你的真名。",
+      "expression": "normal"
+    },
+    {
+      "character": "Player",
+      "text": "你是我师傅... 也是我父亲... 也是我...",
+      "expression": "sad"
+    },
+    {
+      "character": "Player",
+      "text": "我点燃你了。",
+      "expression": "determined"
+    },
+    {
+      "character": "Player",
+      "text": "王国... 终于可以安息了。",
+      "expression": "normal"
+    },
+    {
+      "character": "Player",
+      "text": "我会成为新的守护者。继续你的传承。",
+      "expression": "determined"
+    },
+    {
+      "character": "Player",
+      "text": "【通关】",
+      "expression": "normal"
+    }
+  ]
+}

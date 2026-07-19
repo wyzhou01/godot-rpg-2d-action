@@ -1,0 +1,34 @@
+{
+  "lines": [
+    {
+      "character": "Narrator",
+      "text": "黑曜石王座。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "你没有记忆了。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "你甚至不记得自己是谁。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "但你必须走进王座。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "因为那里有你要击败的最后一个人。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "——你自己。",
+      "expression": "neutral"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Narrator",
+      "text": "黄金圣殿埋藏在王国的金矿深处。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "传说财富之神在此沉睡了千年——他的化身黄金守卫还在巡视。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "所有金币都是他的记忆，每一枚都记录着贪婪者的名字。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "你的名字，是否也在其中？",
+      "expression": "neutral"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "lines": [
+    {
+      "character": "Onyx",
+      "text": "兄弟... 你做到了...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Player",
+      "text": "团长！",
+      "expression": "sad"
+    },
+    {
+      "character": "Onyx",
+      "text": "第七块碎片... 我等了它千年...",
+      "expression": "sad"
+    },
+    {
+      "character": "Onyx",
+      "text": "拿走它... 重燃千年之心... 终结这一切。",
+      "expression": "determined"
+    },
+    {
+      "character": "Player",
+      "text": "我会记住你，导师。",
+      "expression": "sad"
+    },
+    {
+      "character": "Onyx",
+      "text": "去吧，兄弟。圣物在等你。",
+      "expression": "determined"
+    }
+  ]
+}

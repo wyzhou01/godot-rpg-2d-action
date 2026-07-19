@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "火焰山脉... 炎心应该在这里。",
+      "expression": "normal"
+    },
+    {
+      "character": "Fireheart",
+      "text": "欢迎来到熔炉，骑士。",
+      "expression": "fierce"
+    },
+    {
+      "character": "Fireheart",
+      "text": "我是炎心——千年前被圣物选中的第一位守护者。",
+      "expression": "fierce"
+    },
+    {
+      "character": "Fireheart",
+      "text": "让我看看你配不配拿走我的碎片。",
+      "expression": "fierce"
+    }
+  ]
+}

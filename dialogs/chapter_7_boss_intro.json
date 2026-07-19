@@ -1,0 +1,49 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "王座大厅... 最后的禁地。",
+      "expression": "normal"
+    },
+    {
+      "character": "Onyx",
+      "text": "我亲爱的兄弟... 你终于走到了这里。",
+      "expression": "dark"
+    },
+    {
+      "character": "Onyx",
+      "text": "我是你的团长，黑曜。曾经的圣剑骑士团领袖。",
+      "expression": "dark"
+    },
+    {
+      "character": "Player",
+      "text": "团长... 你为什么要背叛骑士团？",
+      "expression": "sad"
+    },
+    {
+      "character": "Onyx",
+      "text": "背叛？我是为了拯救它！",
+      "expression": "determined"
+    },
+    {
+      "character": "Onyx",
+      "text": "圣物腐化了我们的心，让我看着兄弟相残。",
+      "expression": "sad"
+    },
+    {
+      "character": "Onyx",
+      "text": "我偷走碎片，是为了结束这一切！",
+      "expression": "determined"
+    },
+    {
+      "character": "Onyx",
+      "text": "但你也来了。带着你所谓的「拯救」。",
+      "expression": "dark"
+    },
+    {
+      "character": "Onyx",
+      "text": "兄弟，今天只有一个能活着离开。",
+      "expression": "determined"
+    }
+  ]
+}

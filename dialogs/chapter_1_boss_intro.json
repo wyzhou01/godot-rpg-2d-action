@@ -1,0 +1,39 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "1267 年的波兰。圣剑骑士团守护「千年之心」千年。",
+      "expression": "normal"
+    },
+    {
+      "character": "Player",
+      "text": "如今它被分成了 7 块碎片，散落在王国的 7 处禁地。",
+      "expression": "normal"
+    },
+    {
+      "character": "Greyr1",
+      "text": "你终于来了... 骑士。",
+      "expression": "angry"
+    },
+    {
+      "character": "Greyr1",
+      "text": "千年之心已经破碎，你还要追寻吗？",
+      "expression": "angry"
+    },
+    {
+      "character": "Player",
+      "text": "我会集齐碎片。圣物必须回归。",
+      "expression": "determined"
+    },
+    {
+      "character": "Greyr1",
+      "text": "那你也会有代价的... 就像我一样。",
+      "expression": "sad"
+    },
+    {
+      "character": "Greyr1",
+      "text": "既然你选择遗忘，那就来战吧！",
+      "expression": "angry"
+    }
+  ]
+}

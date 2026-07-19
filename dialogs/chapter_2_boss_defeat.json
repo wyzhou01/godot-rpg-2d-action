@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Frost",
+      "text": "不可能... 冰霜之力... 被融化了...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Player",
+      "text": "寒霜... 你为什么背叛骑士团？",
+      "expression": "normal"
+    },
+    {
+      "character": "Frost",
+      "text": "圣物的腐化... 连我的冰都融化了...",
+      "expression": "sad"
+    },
+    {
+      "character": "Frost",
+      "text": "第二块碎片... 拿走吧... 也许你能阻止腐化...",
+      "expression": "sad"
+    }
+  ]
+}

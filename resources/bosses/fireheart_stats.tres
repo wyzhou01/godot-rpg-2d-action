@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="BossStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/boss_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+boss_name = "Fireheart - The First Guardian"
+chapter = 5
+max_hp = 400
+attack_power = 30
+move_speed = 80.0
+detection_range = 1000.0
+phase_2_threshold = 0.66
+phase_3_threshold = 0.33
+phase_1_skills = ["fire_breath", "flame_punch"]
+phase_2_skills = ["fire_breath", "flame_punch", "eruption"]
+phase_3_skills = ["meteor_strike", "fire_storm", "flame_punch"]
+rage_speed_multiplier = 1.6
+rage_attack_multiplier = 1.7
+drops_shard = true
+shard_id = 5

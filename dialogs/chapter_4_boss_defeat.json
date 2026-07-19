@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Goldguard",
+      "text": "我的学生... 你做到了...",
+      "expression": "sad"
+    },
+    {
+      "character": "Player",
+      "text": "导师！我不想和您战斗！",
+      "expression": "sad"
+    },
+    {
+      "character": "Goldguard",
+      "text": "你必须... 圣物... 不能让腐化继续...",
+      "expression": "sad"
+    },
+    {
+      "character": "Goldguard",
+      "text": "第四块碎片... 现在由你守护... 我相信你。",
+      "expression": "sad"
+    }
+  ]
+}

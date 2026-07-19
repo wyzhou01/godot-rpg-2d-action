@@ -1,0 +1,19 @@
+{
+  "lines": [
+    {
+      "character": "Fireheart",
+      "text": "千年的守护... 终于结束了...",
+      "expression": "defeated"
+    },
+    {
+      "character": "Fireheart",
+      "text": "年轻人... 你配得上这火焰。",
+      "expression": "fierce"
+    },
+    {
+      "character": "Fireheart",
+      "text": "第五块碎片... 我守了千年... 你拿走吧。",
+      "expression": "fierce"
+    }
+  ]
+}

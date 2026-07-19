@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "地下墓穴... 死者的安息之所。",
+      "expression": "normal"
+    },
+    {
+      "character": "Rotlord",
+      "text": "活人闯入亡者的领域... 大胆。",
+      "expression": "dark"
+    },
+    {
+      "character": "Rotlord",
+      "text": "我是死灵领主「腐骨」。我守护这些墓穴千年。",
+      "expression": "dark"
+    },
+    {
+      "character": "Rotlord",
+      "text": "你的灵魂... 将成为我的收藏。",
+      "expression": "dark"
+    }
+  ]
+}

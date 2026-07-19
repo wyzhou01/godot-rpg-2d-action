@@ -1,0 +1,44 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "失落圣殿... 圣剑骑士团的圣地。",
+      "expression": "normal"
+    },
+    {
+      "character": "Player",
+      "text": "圣殿骑士长「金卫」... 曾是我最敬重的导师。",
+      "expression": "normal"
+    },
+    {
+      "character": "Goldguard",
+      "text": "我的学生... 你终究还是来了。",
+      "expression": "sad"
+    },
+    {
+      "character": "Goldguard",
+      "text": "我守在这里，不让任何人接近圣物核心。",
+      "expression": "sad"
+    },
+    {
+      "character": "Goldguard",
+      "text": "圣物已被污染。碎片只会传播腐化。",
+      "expression": "sad"
+    },
+    {
+      "character": "Player",
+      "text": "导师... 为什么？",
+      "expression": "sad"
+    },
+    {
+      "character": "Goldguard",
+      "text": "我让你离开，是想让你活下去。",
+      "expression": "sad"
+    },
+    {
+      "character": "Goldguard",
+      "text": "但你选择了执念。来吧，用剑证明你的选择。",
+      "expression": "determined"
+    }
+  ]
+}

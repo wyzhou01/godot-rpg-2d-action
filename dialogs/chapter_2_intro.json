@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Narrator",
+      "text": "雪山修道院在北方山巅，被暴风雪永久包围。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "你的导师寒霜曾经在那里教授你第一道冰系法术。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "他为了复活冰霜之心，向雪山之神献出了自己的名字。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "而你，必须取回他守护的碎片。",
+      "expression": "neutral"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "幻影森林... 暗影德鲁伊「翠语」的领域。",
+      "expression": "normal"
+    },
+    {
+      "character": "Greendruid",
+      "text": "你来了... 我已经等你很久了。",
+      "expression": "calm"
+    },
+    {
+      "character": "Greendruid",
+      "text": "我是翠语。这片森林的守护者。",
+      "expression": "calm"
+    },
+    {
+      "character": "Greendruid",
+      "text": "圣物碎片在我体内千年。拿走它，你会失去更多。",
+      "expression": "calm"
+    },
+    {
+      "character": "Greendruid",
+      "text": "但... 也许这是唯一的路。",
+      "expression": "calm"
+    }
+  ]
+}

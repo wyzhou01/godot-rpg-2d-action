@@ -1,0 +1,29 @@
+{
+  "lines": [
+    {
+      "character": "Player",
+      "text": "边陲古堡。曾经是圣剑骑士团的训练场。",
+      "expression": "normal"
+    },
+    {
+      "character": "Player",
+      "text": "现在被叛教法师「寒霜」占据。",
+      "expression": "normal"
+    },
+    {
+      "character": "Frost",
+      "text": "又一个执迷不悟的灵魂... 你以为收集碎片就能拯救王国？",
+      "expression": "cold"
+    },
+    {
+      "character": "Frost",
+      "text": "圣物已经腐化千年。收集它只会加速毁灭。",
+      "expression": "cold"
+    },
+    {
+      "character": "Frost",
+      "text": "让我用冰霜教你真理。",
+      "expression": "cold"
+    }
+  ]
+}

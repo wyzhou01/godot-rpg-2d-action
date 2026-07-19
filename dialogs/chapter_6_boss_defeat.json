@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Greendruid",
+      "text": "你做到了... 森林的守护者。",
+      "expression": "calm"
+    },
+    {
+      "character": "Player",
+      "text": "翠语... 为什么圣物碎片在森林里？",
+      "expression": "normal"
+    },
+    {
+      "character": "Greendruid",
+      "text": "千年前是我种下... 想保护它... 但腐化蔓延...",
+      "expression": "calm"
+    },
+    {
+      "character": "Greendruid",
+      "text": "第六块碎片... 拿走吧... 还有最后一块。",
+      "expression": "calm"
+    }
+  ]
+}

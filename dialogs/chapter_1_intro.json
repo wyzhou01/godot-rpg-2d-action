@@ -1,0 +1,24 @@
+{
+  "lines": [
+    {
+      "character": "Narrator",
+      "text": "三年前，你被逐出圣剑骑士团。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "你还记得那一天吗？圣剑断裂的声音… 团长的判决… 以及所有人眼中的失望。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "如今你回到故土，千年之心已被偷走，分散在七处禁地。",
+      "expression": "neutral"
+    },
+    {
+      "character": "Narrator",
+      "text": "禁地的入口——旧圣剑骑士团修道院，灰鸦教头还在那里。他曾经是你的教官。",
+      "expression": "neutral"
+    }
+  ]
+}

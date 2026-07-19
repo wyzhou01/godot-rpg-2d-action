@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="BossStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/boss_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+boss_name = "Greyr1 - Fallen Scout Captain"
+chapter = 1
+max_hp = 200
+attack_power = 15
+move_speed = 80.0
+detection_range = 1000.0
+phase_2_threshold = 0.66
+phase_3_threshold = 0.33
+phase_1_skills = ["slash_combo", "shield_bash"]
+phase_2_skills = ["slash_combo", "fireball", "teleport"]
+phase_3_skills = ["ultimate_cast", "summon_minions", "rage_slash"]
+rage_speed_multiplier = 1.5
+rage_attack_multiplier = 1.3
+drops_shard = true
+shard_id = 1
