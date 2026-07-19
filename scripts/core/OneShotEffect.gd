@@ -20,7 +20,7 @@ func play() -> void:
 	if animation_player:
 		animation_player.play("default")
 	if animated_sprite:
-		animated_sprite.play("default")
+		animated__set_sprite_color("default")
 	# 寿命到期销毁
 	get_tree().create_timer(lifetime).timeout.connect(queue_free)
 

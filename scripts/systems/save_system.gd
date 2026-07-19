@@ -3,6 +3,7 @@
 ## 提供 3 个手动存档位 + 1 个自动存档位
 ## 用 JSON 格式（人类可读 / 调试方便）
 
+extends Node
 const SAVE_DIR := "user://saves/"
 const MAX_SLOTS := 4  # 0-2 手动, 3 自动
 

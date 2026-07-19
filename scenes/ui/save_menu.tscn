@@ -1,0 +1,95 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/save_menu.gd" id="1_save_menu"]
+
+[sub_resource type="StyleBoxFlat" id="Panel_style"]
+bg_color = Color(0.05, 0.05, 0.1, 1)
+
+[node name="SaveMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_save_menu")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("Panel_style")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_bottom = 60
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+text = "存档 / 读档"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+
+[node name="Spacer1" type="Control" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Slot1Button" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "手动 1
+[空存档]"
+
+[node name="Slot2Button" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "手动 2
+[空存档]"
+
+[node name="Slot3Button" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "手动 3
+[空存档]"
+
+[node name="AutoSlotButton" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+text = "自动存档
+[空存档]"
+
+[node name="Spacer2" type="Control" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "返回主菜单"
+
+[node name="InfoLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -30.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "选择一个存档读档，或新建游戏覆盖"
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)

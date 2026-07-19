@@ -9,6 +9,7 @@ class_name Knight extends BaseEnemy
 @export var block_chance: float = 0.2
 
 var is_blocking: bool = false
+var attack_timer: float = 0.0
 
 
 func _ready() -> void:

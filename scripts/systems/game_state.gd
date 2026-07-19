@@ -6,6 +6,7 @@
 ##   - 与 SaveSystem 交互
 
 # 玩家当前状态
+extends Node
 var current_chapter: int = 1
 var max_hp: int = 100
 var current_hp: int = 100
@@ -124,3 +125,10 @@ func _apply_save(save: Dictionary) -> void:
 	total_play_time = save.get("total_play_time", 0.0)
 	total_enemies_killed = save.get("total_enemies_killed", 0)
 	total_deaths = save.get("total_deaths", 0)
+
+func complete_game() -> void:
+	# 7 个碎片都收集了
+	if collected_shards.size() >= 7:
+		var dh = Engine.get_main_loop().root.get_node_or_null("DialogueHelper")
+		if dh and dh.has_method("show"):
+			dh.show.call_deferred("res://dialogs/game_complete.json")

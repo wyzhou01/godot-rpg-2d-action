@@ -15,7 +15,7 @@ class_name Player extends CharacterBody2D
 ##   └── PlayerDetectionZone (Area2D)  # 玩家无需此，但保留可扩展
 
 # 状态枚举
-enum State {
+enum PlayerState {
 	IDLE,
 	RUN,
 	JUMP,
@@ -35,11 +35,12 @@ enum State {
 @onready var hurt_box: HurtBox = $HurtBox
 @onready var hitbox_pivot: Node2D = $HitboxPivot
 @onready var sword_hitbox: HitBox = $HitboxPivot/SwordHitbox
-@onready var state_machine: StateMachine = $StateMachine
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
+# 可选节点（场景可能未挂载，运行时 null-safe）
+@onready var state_machine: Node = get_node_or_null("StateMachine")
+@onready var player_detection_zone: Area2D = get_node_or_null("PlayerDetectionZone")
 
 # 状态机
-var state: State = State.IDLE
+var state: PlayerState = PlayerState.IDLE
 
 # 输入缓存
 var input_direction: float = 0.0
@@ -63,15 +64,16 @@ var can_dodge: bool = true
 
 func _ready() -> void:
 	add_to_group("player")
-	state_machine.current_state = "Idle"
+	if state_machine:
+		state_machine.current_state = "Idle"
 	_setup_animations()
 	_setup_signals()
 
 
 func _setup_animations() -> void:
-	# 连接 AnimationPlayer 信号
-	if animation_player:
-		animation_player.animation_finished.connect(_on_animation_finished)
+	# 连接 AnimatedSprite2D 信号
+	if sprite:
+		sprite.animation_finished.connect(_on_animation_finished)
 
 
 func _setup_signals() -> void:
@@ -83,7 +85,7 @@ func _setup_signals() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if state == State.DEATH:
+	if state == PlayerState.DEATH:
 		return
 
 	# 读取输入
@@ -95,13 +97,13 @@ func _physics_process(delta: float) -> void:
 
 	# 状态机更新
 	match state:
-		State.IDLE: _state_idle(delta)
-		State.RUN: _state_run(delta)
-		State.JUMP: _state_jump(delta)
-		State.FALL: _state_fall(delta)
-		State.ATTACK: _state_attack(delta)
-		State.DODGE: _state_dodge(delta)
-		State.HURT: _state_hurt(delta)
+		PlayerState.IDLE: _state_idle(delta)
+		PlayerState.RUN: _state_run(delta)
+		PlayerState.JUMP: _state_jump(delta)
+		PlayerState.FALL: _state_fall(delta)
+		PlayerState.ATTACK: _state_attack(delta)
+		PlayerState.DODGE: _state_dodge(delta)
+		PlayerState.HURT: _state_hurt(delta)
 
 	# 连击窗口计时
 	if attack_combo_window_timer > 0:
@@ -133,42 +135,42 @@ func _state_idle(_delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0, player_stats.move_speed * 5 * _delta if player_stats else 1100 * _delta)
 	play_anim("idle")
 	if input_direction != 0:
-		_change_state(State.RUN)
+		_change_state(PlayerState.RUN)
 	elif input_jump_pressed and is_on_floor():
-		_change_state(State.JUMP)
+		_change_state(PlayerState.JUMP)
 	elif input_attack_pressed:
-		_change_state(State.ATTACK)
+		_change_state(PlayerState.ATTACK)
 	elif input_dodge_pressed and can_dodge:
-		_change_state(State.DODGE)
+		_change_state(PlayerState.DODGE)
 
 
 func _state_run(delta: float) -> void:
 	if input_direction != 0:
 		velocity.x = input_direction * (player_stats.move_speed if player_stats else 220.0)
 	else:
-		_change_state(State.IDLE)
+		_change_state(PlayerState.IDLE)
 		return
 	play_anim("run")
 	if not is_on_floor():
-		_change_state(State.FALL)
+		_change_state(PlayerState.FALL)
 	elif input_jump_pressed:
-		_change_state(State.JUMP)
+		_change_state(PlayerState.JUMP)
 	elif input_attack_pressed:
-		_change_state(State.ATTACK)
+		_change_state(PlayerState.ATTACK)
 	elif input_dodge_pressed and can_dodge:
-		_change_state(State.DODGE)
+		_change_state(PlayerState.DODGE)
 
 
 func _state_jump(delta: float) -> void:
-	if state != State.JUMP or not has_jumped:
+	if state != PlayerState.JUMP or not has_jumped:
 		# 第一次进入
 		velocity.y = (player_stats.jump_velocity if player_stats else -480.0)
 		has_jumped = true
 	play_anim("jump")
 	if velocity.y > 0:
-		_change_state(State.FALL)
+		_change_state(PlayerState.FALL)
 	elif input_attack_pressed and attack_combo_index == 0:
-		_change_state(State.ATTACK)
+		_change_state(PlayerState.ATTACK)
 	# 空中可控制方向
 	if input_direction != 0:
 		velocity.x = input_direction * (player_stats.move_speed if player_stats else 220.0)
@@ -178,10 +180,10 @@ func _state_fall(delta: float) -> void:
 	play_anim("fall")
 	if is_on_floor():
 		has_jumped = false
-		_change_state(State.IDLE if input_direction == 0 else State.RUN)
+		_change_state(PlayerState.IDLE if input_direction == 0 else PlayerState.RUN)
 	# 空中攻击（下落斩）
 	if input_attack_pressed and attack_combo_index == 0:
-		_change_state(State.ATTACK)
+		_change_state(PlayerState.ATTACK)
 
 
 func _state_attack(delta: float) -> void:
@@ -207,25 +209,25 @@ func _state_hurt(_delta: float) -> void:
 
 var has_jumped: bool = false
 
-func _change_state(new_state: State) -> void:
+func _change_state(new_state: PlayerState) -> void:
 	if state == new_state:
 		return
 	# 退出当前状态
 	match state:
-		State.DODGE:
+		PlayerState.DODGE:
 			hurt_box.invulnerable = false
-		State.ATTACK:
+		PlayerState.ATTACK:
 			sword_hitbox.disable()
 	state = new_state
 	# 进入新状态
 	match new_state:
-		State.JUMP:
+		PlayerState.JUMP:
 			has_jumped = false
-		State.ATTACK:
+		PlayerState.ATTACK:
 			attack_combo_index = 0
 			can_combo = false
 			attack_combo_window_timer = 0.0
-		State.DODGE:
+		PlayerState.DODGE:
 			can_dodge = false
 			dodge_timer = (player_stats.dash_cooldown if player_stats else 1.0)
 
@@ -243,7 +245,7 @@ func _on_animation_finished(anim_name: StringName) -> void:
 			else:
 				attack_combo_index = 0
 				sword_hitbox.disable()
-				_change_state(State.IDLE)
+				_change_state(PlayerState.IDLE)
 		&"attack_2":
 			if can_combo:
 				attack_combo_index = 2
@@ -254,16 +256,16 @@ func _on_animation_finished(anim_name: StringName) -> void:
 			else:
 				attack_combo_index = 0
 				sword_hitbox.disable()
-				_change_state(State.IDLE)
+				_change_state(PlayerState.IDLE)
 		&"attack_3":
 			attack_combo_index = 0
 			sword_hitbox.disable()
-			_change_state(State.IDLE)
+			_change_state(PlayerState.IDLE)
 		&"dodge":
 			hurt_box.invulnerable = false
-			_change_state(State.IDLE)
+			_change_state(PlayerState.IDLE)
 		&"hurt":
-			_change_state(State.IDLE)
+			_change_state(PlayerState.IDLE)
 
 
 ## AnimationPlayer 的方法 track 在 attack_1 中调用，启用 HitBox
@@ -278,18 +280,18 @@ func _check_combo() -> void:
 
 
 func play_anim(name: String) -> void:
-	if animation_player and animation_player.current_animation != name:
-		animation_player.play(name)
+	if sprite and sprite.animation != name:
+		sprite.play(name)
 
 
 # ===== 信号回调 =====
 func _on_hurt() -> void:
-	_change_state(State.HURT)
+	_change_state(PlayerState.HURT)
 	play_anim("hurt")
 
 
 func _on_death() -> void:
-	_change_state(State.DEATH)
+	_change_state(PlayerState.DEATH)
 	play_anim("death")
 	set_physics_process(false)
 
@@ -298,9 +300,9 @@ func _on_death() -> void:
 func _update_sprite_direction() -> void:
 	if velocity.x > 0:
 		facing = 1
-		sprite.flip_h = false
+		sprite.scale.x = -1
 		hitbox_pivot.scale.x = 1
 	elif velocity.x < 0:
 		facing = -1
-		sprite.flip_h = true
+		sprite.scale.x = 1
 		hitbox_pivot.scale.x = -1

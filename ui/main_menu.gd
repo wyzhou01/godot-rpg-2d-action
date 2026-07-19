@@ -20,11 +20,7 @@ func _ready() -> void:
 			has_save = true
 			break
 	continue_button.visible = has_save
-
-	new_game_button.pressed.connect(_on_new_game_pressed)
-	continue_button.pressed.connect(_on_continue_pressed)
-	options_button.pressed.connect(_on_options_pressed)
-	quit_button.pressed.connect(_on_quit_pressed)
+	# 信号已在 .tscn 里连接，不要重复 connect()
 
 
 func _on_new_game_pressed() -> void:
@@ -68,6 +64,10 @@ func _on_continue_pressed() -> void:
 
 
 func _on_options_pressed() -> void:
+	pass
+
+func _on_save_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/save_menu.tscn")
 	# TODO: 实现选项菜单（基于 Maaack）
 	push_warning("Options menu not yet implemented")
 

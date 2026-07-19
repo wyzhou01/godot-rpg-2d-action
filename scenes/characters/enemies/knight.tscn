@@ -1,0 +1,70 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/enemies/Knight.gd" id="1_knight"]
+[ext_resource type="Script" path="res://scripts/core/Stats.gd" id="2_stats"]
+[ext_resource type="Script" path="res://scripts/core/HurtBox.gd" id="3_hurtbox"]
+[ext_resource type="Script" path="res://scripts/core/PlayerDetectionZone.gd" id="4_detect"]
+[ext_resource type="Resource" path="res://resources/enemies/knight_stats.tres" id="5_stats_res"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/knight_sprite_frames.tres" id="10_spriteframes"]
+
+[sub_resource type="RectangleShape2D" id="Knight_collision"]
+[sub_resource type="RectangleShape2D" id="Knight_hurtbox"]
+[sub_resource type="RectangleShape2D" id="Knight_detection"]
+
+size = Vector2(24, 48)
+
+size = Vector2(22, 44)
+
+size = Vector2(400, 200)
+
+[sub_resource type="Animation" id="Animation_enemy_idle"]
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.95, 0.95, 0.95, 1), Color(1, 1, 1, 1)]
+}
+
+
+[node name="Knight" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_knight")
+enemy_stats = ExtResource("5_stats_res")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -40)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("10_spriteframes")
+animation = &"idle"
+autoplay = "idle"
+modulate = Color(0.7, 0.5, 0.3, 1)
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("2_stats")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("Knight_hurtbox")
+
+[node name="PlayerDetectionZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("4_detect")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionZone"]
+shape = SubResource("Knight_detection")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/idle = SubResource("Animation_enemy_idle")

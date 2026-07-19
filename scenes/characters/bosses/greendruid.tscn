@@ -1,0 +1,96 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/bosses/Greendruid.gd" id="1_boss"]
+[ext_resource type="Resource" path="res://resources/bosses/greendruid_stats.tres" id="RES_stats"]
+[ext_resource type="Script" path="res://scripts/core/Stats.gd" id="RES_stats_script"]
+[ext_resource type="Script" path="res://scripts/core/HurtBox.gd" id="RES_hurtbox"]
+[ext_resource type="Script" path="res://scripts/core/PlayerDetectionZone.gd" id="RES_detection"]
+[ext_resource type="SpriteFrames" path="res://resources/bosses/greendruid_sprite_frames.tres" id="10_spriteframes"]
+
+[sub_resource type="RectangleShape2D" id="Boss_collision"]
+[sub_resource type="RectangleShape2D" id="Hurtbox_shape"]
+[sub_resource type="RectangleShape2D" id="Detection_shape"]
+[sub_resource type="StyleBoxFlat" id="BossHPBarStyle"]
+
+[node name="Greendruid" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_boss")
+boss_stats = ExtResource("RES_stats")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -80)
+scale = Vector2(2.5, 2.5)
+sprite_frames = ExtResource("10_spriteframes")
+animation = &"idle"
+autoplay = "idle"
+modulate = Color(0.4, 1.0, 0.6, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Boss_collision")
+
+size = Vector2(40, 80)
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("RES_stats_script")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 4
+script = ExtResource("RES_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("Hurtbox_shape")
+
+size = Vector2(36, 76)
+
+[node name="PlayerDetectionZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("RES_detection")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionZone"]
+shape = SubResource("Detection_shape")
+
+size = Vector2(1000, 500)
+
+[node name="ProjectileSpawner" type="Node2D" parent="."]
+position = Vector2(0, -60)
+
+bg_color = Color(0.2, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.7, 0.3, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="BossUI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="NameLabel" type="Label" parent="BossUI"]
+offset_left = 540.0
+offset_top = 60.0
+offset_right = 740.0
+offset_bottom = 100.0
+text = "翡翠德鲁伊"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+
+[node name="BossHPBar" type="ProgressBar" parent="BossUI"]
+offset_left = 440.0
+offset_top = 110.0
+offset_right = 840.0
+offset_bottom = 130.0
+max_value = 1100
+value = 1100
+show_percentage = false
+theme_override_styles/fill = SubResource("BossHPBarStyle")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

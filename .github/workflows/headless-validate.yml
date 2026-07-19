@@ -1,0 +1,64 @@
+name: Headless Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  static-check:
+    name: Python Static Check
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run static check
+        run: python3 scripts/static_check.py
+
+  godot-headless:
+    name: Godot 4.6 Headless Validate
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache .godot
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: godot-${{ hashFiles('project.godot') }}
+          restore-keys: godot-
+
+      - name: Download Godot 4.6.1
+        run: |
+          cd /tmp
+          curl -L -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_macos.universal.zip" --max-time 300
+          unzip -q godot.zip
+          mv Godot.app /Applications/Godot.app
+          /Applications/Godot.app/Contents/MacOS/Godot --version
+
+      - name: Run headless validation
+        run: |
+          rm -rf .godot
+          /Applications/Godot.app/Contents/MacOS/Godot --headless --editor --quit --verbose 2>&1 | tee /tmp/godot.log
+
+      - name: Check for errors
+        run: |
+          if grep -qE "SCRIPT ERROR|Parse Error|Failed to load script" /tmp/godot.log; then
+            echo "❌ Godot parse/load errors found"
+            grep -E "SCRIPT ERROR|Parse Error|Failed to load script" /tmp/godot.log | sort -u
+            exit 1
+          fi
+          echo "✅ No parse errors"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-headless-log
+          path: /tmp/godot.log

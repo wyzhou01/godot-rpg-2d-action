@@ -1,0 +1,98 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/bosses/Greyr1.gd" id="1_boss"]
+[ext_resource type="Script" path="res://scripts/core/Stats.gd" id="2_stats"]
+[ext_resource type="Script" path="res://scripts/core/HurtBox.gd" id="3_hurtbox"]
+[ext_resource type="Script" path="res://scripts/core/PlayerDetectionZone.gd" id="4_detect"]
+[ext_resource type="SpriteFrames" path="res://resources/bosses/greyr1_sprite_frames.tres" id="10_spriteframes"]
+
+[sub_resource type="RectangleShape2D" id="Boss_collision"]
+[sub_resource type="RectangleShape2D" id="Boss_hurtbox"]
+[sub_resource type="RectangleShape2D" id="Boss_detection"]
+[sub_resource type="StyleBoxFlat" id="BossHPBarStyle"]
+
+size = Vector2(40, 80)
+
+size = Vector2(36, 76)
+
+size = Vector2(1000, 500)
+
+[node name="Greyr1" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_boss")
+chapter_number = 1
+slash_damage = 15
+arrow_damage = 8
+summon_cooldown = 10.0
+rage_speed_multiplier = 1.5
+rage_attack_multiplier = 1.3
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -80)
+scale = Vector2(2.5, 2.5)
+sprite_frames = ExtResource("10_spriteframes")
+animation = &"idle"
+autoplay = "idle"
+modulate = Color(0.8, 0.8, 0.85, 1)
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("2_stats")
+max_health = 200
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 4
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("Boss_hurtbox")
+
+[node name="PlayerDetectionZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("4_detect")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionZone"]
+shape = SubResource("Boss_detection")
+
+[node name="ProjectileSpawner" type="Node2D" parent="."]
+position = Vector2(0, -30)
+
+bg_color = Color(0.2, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.7, 0.3, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="BossUI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="NameLabel" type="Label" parent="BossUI"]
+offset_left = 540.0
+offset_top = 60.0
+offset_right = 740.0
+offset_bottom = 100.0
+text = "灰鸦·教头"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+
+[node name="BossHPBar" type="ProgressBar" parent="BossUI"]
+offset_left = 440.0
+offset_top = 110.0
+offset_right = 840.0
+offset_bottom = 130.0
+max_value = 200
+value = 200
+show_percentage = false
+theme_override_styles/fill = SubResource("BossHPBarStyle")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

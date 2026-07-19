@@ -1,0 +1,56 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/player/Player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/core/Stats.gd" id="2_stats"]
+[ext_resource type="Script" path="res://scripts/core/HurtBox.gd" id="3_hurtbox"]
+[ext_resource type="Script" path="res://scripts/characters/player/SwordHitbox.gd" id="4_sword"]
+[ext_resource type="Resource" path="res://resources/player/base_player_stats.tres" id="5_stats_res"]
+[ext_resource type="SpriteFrames" path="res://resources/player/player_sprite_frames.tres" id="6_spriteframes"]
+
+[sub_resource type="RectangleShape2D" id="CollisionShape_player"]
+size = Vector2(24, 48)
+
+[sub_resource type="RectangleShape2D" id="CollisionShape_hurtbox"]
+size = Vector2(20, 44)
+
+[sub_resource type="RectangleShape2D" id="CollisionShape_swordhitbox"]
+size = Vector2(60, 30)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_player")
+player_stats = ExtResource("5_stats_res")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -48)
+sprite_frames = ExtResource("6_spriteframes")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CollisionShape_player")
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("2_stats")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("CollisionShape_hurtbox")
+
+[node name="HitboxPivot" type="Node2D" parent="."]
+
+[node name="SwordHitbox" type="Area2D" parent="HitboxPivot"]
+collision_layer = 4
+collision_mask = 4
+monitoring = false
+script = ExtResource("4_sword")
+damage = 10
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxPivot/SwordHitbox"]
+shape = SubResource("CollisionShape_swordhitbox")
+disabled = true

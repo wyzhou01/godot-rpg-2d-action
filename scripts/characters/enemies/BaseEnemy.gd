@@ -12,7 +12,7 @@ class_name BaseEnemy extends CharacterBody2D
 ##   └── (optional) ProjectileSpawner (Node2D, 远程敌人)
 
 # 状态枚举
-enum State {
+enum EnemyState {
 	IDLE,
 	CHASE,
 	ATTACK,
@@ -31,9 +31,8 @@ enum State {
 @onready var detection: PlayerDetectionZone = $PlayerDetectionZone
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
-var state: State = State.IDLE
+var state: EnemyState = EnemyState.IDLE
 var player: Node2D = null
-var velocity: Vector2 = Vector2.ZERO
 var facing: int = 1  # 1 = 右, -1 = 左
 
 
@@ -57,17 +56,17 @@ func _setup_signals() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if state == State.DEATH:
+	if state == EnemyState.DEATH:
 		return
 
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
 	match state:
-		State.IDLE: _state_idle(delta)
-		State.CHASE: _state_chase(delta)
-		State.ATTACK: _state_attack(delta)
-		State.HURT: pass
+		EnemyState.IDLE: _state_idle(delta)
+		EnemyState.CHASE: _state_chase(delta)
+		EnemyState.ATTACK: _state_attack(delta)
+		EnemyState.HURT: pass
 
 	move_and_slide()
 	_update_sprite_direction()
@@ -79,18 +78,18 @@ func _state_idle(_delta: float) -> void:
 	play_anim("idle")
 	if detection and detection.has_player():
 		player = detection.player
-		_change_state(State.CHASE)
+		_change_state(EnemyState.CHASE)
 
 
 func _state_chase(_delta: float) -> void:
 	if not is_instance_valid(player):
-		_change_state(State.IDLE)
+		_change_state(EnemyState.IDLE)
 		return
 
 	var distance_to_player = global_position.distance_to(player.global_position)
 	play_anim("run")
 	if distance_to_player <= (enemy_stats.attack_range if enemy_stats else 100.0):
-		_change_state(State.ATTACK)
+		_change_state(EnemyState.ATTACK)
 	else:
 		var direction = sign(player.global_position.x - global_position.x)
 		facing = int(direction)
@@ -102,19 +101,19 @@ func _state_attack(_delta: float) -> void:
 	play_anim("attack")
 	# 实际攻击由动画驱动（attack hitbox 启用/禁用）
 	if not is_instance_valid(player):
-		_change_state(State.IDLE)
+		_change_state(EnemyState.IDLE)
 
 
 # ===== 信号回调 =====
 func _on_hurt() -> void:
-	_change_state(State.HURT)
+	_change_state(EnemyState.HURT)
 	play_anim("hurt")
 	# 击退（如果 HitBox 有 knockback_direction）
 	velocity.x = facing * -150  # 默认后退
 
 
 func _on_death() -> void:
-	_change_state(State.DEATH)
+	_change_state(EnemyState.DEATH)
 	play_anim("death")
 	# 死亡特效
 	set_physics_process(false)
@@ -128,12 +127,12 @@ func _on_player_detected(p: Node2D) -> void:
 
 func _on_player_lost(_p: Node2D) -> void:
 	player = null
-	if state == State.CHASE:
-		_change_state(State.IDLE)
+	if state == EnemyState.CHASE:
+		_change_state(EnemyState.IDLE)
 
 
 # ===== 状态切换 =====
-func _change_state(new_state: State) -> void:
+func _change_state(new_state: EnemyState) -> void:
 	if state == new_state:
 		return
 	state = new_state
@@ -148,10 +147,10 @@ func play_anim(name: String) -> void:
 # ===== 方向 =====
 func _update_sprite_direction() -> void:
 	if velocity.x > 0:
-		sprite.flip_h = false
+		sprite.scale.x = -1
 		facing = 1
 	elif velocity.x < 0:
-		sprite.flip_h = true
+		sprite.scale.x = 1
 		facing = -1
 
 
@@ -161,11 +160,11 @@ func _on_animation_finished(anim_name: StringName) -> void:
 		if detection and detection.has_player():
 			var dist = global_position.distance_to(player.global_position)
 			if dist > (enemy_stats.attack_range if enemy_stats else 100.0):
-				_change_state(State.CHASE)
+				_change_state(EnemyState.CHASE)
 		else:
-			_change_state(State.IDLE)
+			_change_state(EnemyState.IDLE)
 	elif anim_name == &"hurt":
 		if detection and detection.has_player():
-			_change_state(State.CHASE)
+			_change_state(EnemyState.CHASE)
 		else:
-			_change_state(State.IDLE)
+			_change_state(EnemyState.IDLE)

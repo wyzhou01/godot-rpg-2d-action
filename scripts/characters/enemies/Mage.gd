@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func _state_chase(delta: float) -> void:
 	if not is_instance_valid(player):
-		_change_state(State.IDLE)
+		_change_state(EnemyState.IDLE)
 		return
 
 	var distance_to_player = global_position.distance_to(player.global_position)

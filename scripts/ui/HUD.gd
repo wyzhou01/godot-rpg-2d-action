@@ -37,7 +37,12 @@ func _on_health_changed(stats: Stats) -> void:
 
 
 func _flash_screen() -> void:
-	# 简单 modulate 闪烁
+	# 红屏闪烁（受击时）— CanvasLayer 不支持 modulate，用动态创建 ColorRect
+	var flash = ColorRect.new()
+	flash.color = Color(1, 0.3, 0.3, 0.3)
+	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(flash)
 	var tween = create_tween()
-	modulate = Color(1, 0.5, 0.5)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.2)
+	tween.tween_property(flash, "modulate:a", 0.0, 0.3)
+	tween.tween_callback(flash.queue_free)
