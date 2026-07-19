@@ -45,6 +45,13 @@ Phase 0       Phase 1       Phase 2-3     Phase 4
 - SaveLoadMenu 4 槽位选择（主菜单 Continue）
 - 详见 `docs/PHASE_2_DONE.md`
 
+## ✅ Phase 3 完成（教学 + 平衡 + EndScreen）
+- TutorialHint（Ch1 第一次进入显示移动/攻击/闪避提示）
+- balance_config.gd 单一难度参数源（Boss HP 按章节递增）
+- EndScreen（Chapter 7 通关后显示通关时间/死亡/碎片/分数）
+- Ch2-7 都加 Checkpoint
+- 详见 `docs/PHASE_3_DONE.md`
+
 ---
 
 ## 📋 Phase 0: 架构重构（预计 1-3 天）
