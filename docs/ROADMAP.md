@@ -24,8 +24,20 @@ Phase 0       Phase 1       Phase 2-3     Phase 4
 - 对话系统：DialogueHelper（重写后稳定）
 - 7 Boss AI：独立 _ai_tick
 - 存档系统：4 槽位 + JSON
-- 测试套件：134 测试 100% 通过
-- 30 场景 0 Parse 错误
+- 测试套件：137 测试 100% 通过
+- 33 场景 0 Parse 错误
+
+## ✅ Phase 0 完成（架构重构）
+- Actor 基类、PlayerData autoload、InputMap 完整
+- Portal2D + Fragment 收集
+- Chapter 1 真关卡
+- 详见 `docs/PHASE_0.md`
+
+## ✅ Phase 1 完成（Pause UI + 7 章真关卡）
+- Pause 菜单（Esc 切换）
+- 7 章 intro 都成真关卡（平台 + 敌人 + Portal + Fragment）
+- 7 章 boss 场景都加 PauseMenu
+- 详见 `docs/PHASE_1_DONE.md`
 
 ---
 
