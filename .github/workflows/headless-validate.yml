@@ -62,3 +62,35 @@ jobs:
         with:
           name: godot-headless-log
           path: /tmp/godot.log
+
+  automated-tests:
+    name: Automated Test Suite (134 tests)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache .godot
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: godot-${{ hashFiles('project.godot') }}
+          restore-keys: godot-
+
+      - name: Download Godot 4.6.1
+        run: |
+          cd /tmp
+          curl -L -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.6.1-stable/Godot_v4.6.1-stable_macos.universal.zip" --max-time 300
+          unzip -q godot.zip
+          mv Godot.app /Applications/Godot.app
+          /Applications/Godot.app/Contents/MacOS/Godot --version
+
+      - name: Run automated test suite
+        run: |
+          bash tests/run_all_tests.sh
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: tests/test_report.log

@@ -2,8 +2,6 @@
 ## ETERNALDUTY 自动化测试套件 - 主入口
 ## 跑全部 6 个测试套件，汇总报告
 
-set -e
-
 GODOT_BIN="/Applications/Godot.app/Contents/MacOS/Godot"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_DIR"
@@ -18,42 +16,71 @@ echo "  项目目录: $PROJECT_DIR" | tee -a "$REPORT_FILE"
 echo "==============================================================" | tee -a "$REPORT_FILE"
 echo "" | tee -a "$REPORT_FILE"
 
+# 套件 + 超时（秒）
+declare -A SUITES
+SUITES[scene_validation]=15
+SUITES[resources]=15
+SUITES[dialogue]=30
+SUITES[combat]=60
+SUITES[save_system]=15
+SUITES[e2e_full_game]=120
+
 TOTAL_PASS=0
 TOTAL_FAIL=0
-TOTAL_SKIP=0
+TOTAL_TESTS=0
 TOTAL_TIME=0
-SUITES=(
-    "scene_validation:res://tests/test_scene_validation.gd"
-    "resources:res://tests/test_resources.gd"
-    "dialogue:res://tests/test_dialogue.gd"
-    "combat:res://tests/test_combat.gd"
-    "save_system:res://tests/test_save_system.gd"
-    "e2e_full_game:res://tests/test_e2e_full_game.gd"
-)
 
-for suite in "${SUITES[@]}"; do
-    name="${suite%%:*}"
-    path="${suite##*:}"
-    scene_path="${path#res://}"
+for suite in scene_validation resources dialogue combat save_system e2e_full_game; do
+    timeout=${SUITES[$suite]}
+    scene_path="res://tests/test_${suite}.tscn"
     
     echo "────────────────────────────────────────────────────────────" | tee -a "$REPORT_FILE"
-    echo "  ▶ 套件: $name" | tee -a "$REPORT_FILE"
+    echo "  ▶ 套件: $suite (timeout ${timeout}s)" | tee -a "$REPORT_FILE"
     echo "────────────────────────────────────────────────────────────" | tee -a "$REPORT_FILE"
     
-    start=$(date +%s%3N)
+    start=$(date +%s)
     
-    # 跑测试
-    if "$GODOT_BIN" --headless --path "$PROJECT_DIR" "$scene_path" 2>&1 | tee -a "$REPORT_FILE"; then
-        end=$(date +%s%3N)
-        elapsed=$((end - start))
-        TOTAL_TIME=$((TOTAL_TIME + elapsed))
-        echo "  ⏱ 耗时: ${elapsed}ms" | tee -a "$REPORT_FILE"
+    # 跑测试 — 用 bash 自己的超时机制
+    "$GODOT_BIN" --headless --path "$PROJECT_DIR" "$scene_path" > /tmp/suite_$suite.log 2>&1 &
+    pid=$!
+    # bash sleep N 等待最多 timeout 秒
+    elapsed=0
+    while kill -0 $pid 2>/dev/null && [ $elapsed -lt $timeout ]; do
+        sleep 1
+        elapsed=$((elapsed+1))
+    done
+    if kill -0 $pid 2>/dev/null; then
+        kill -9 $pid 2>/dev/null
+        wait $pid 2>/dev/null
+        echo "  ⚠ TIMEOUT after ${timeout}s" | tee -a "$REPORT_FILE"
     else
-        end=$(date +%s%3N)
-        elapsed=$((end - start))
-        TOTAL_TIME=$((TOTAL_TIME + elapsed))
+        wait $pid 2>/dev/null
+    fi
+    exit_code=$?
+    
+    end=$(date +%s)
+    elapsed=$((end - start))
+    TOTAL_TIME=$((TOTAL_TIME + elapsed))
+    
+    # 解析结果
+    if grep -q "ALL TESTS PASSED" /tmp/suite_$suite.log; then
+        # 提取测试数
+        results=$(grep "Results:" /tmp/suite_$suite.log | head -1)
+        passed=$(echo "$results" | grep -oE "[0-9]+ PASS" | grep -oE "[0-9]+")
+        total=$(grep "Total tests:" /tmp/suite_$suite.log | grep -oE "[0-9]+" | head -1)
+        if [ -n "$passed" ]; then TOTAL_PASS=$((TOTAL_PASS + passed)); fi
+        if [ -n "$total" ]; then TOTAL_TESTS=$((TOTAL_TESTS + total)); fi
+        echo "  ✅ $results (${elapsed}s)" | tee -a "$REPORT_FILE"
+    elif grep -q "TEST SUITE FAILED" /tmp/suite_$suite.log; then
         TOTAL_FAIL=$((TOTAL_FAIL + 1))
-        echo "  ❌ $name FAILED (${elapsed}ms)" | tee -a "$REPORT_FILE"
+        results=$(grep "Results:" /tmp/suite_$suite.log | head -1)
+        echo "  ❌ FAILED: $results" | tee -a "$REPORT_FILE"
+        # 列出失败测试
+        grep -A 1 "❌ \[FAIL\]" /tmp/suite_$suite.log | tee -a "$REPORT_FILE" | head -10
+    else
+        TOTAL_FAIL=$((TOTAL_FAIL + 1))
+        echo "  ❌ UNKNOWN: exit=$exit_code" | tee -a "$REPORT_FILE"
+        tail -10 /tmp/suite_$suite.log | tee -a "$REPORT_FILE"
     fi
     echo "" | tee -a "$REPORT_FILE"
 done
@@ -62,9 +89,11 @@ echo "==============================================================" | tee -a "
 echo "  最终报告" | tee -a "$REPORT_FILE"
 echo "==============================================================" | tee -a "$REPORT_FILE"
 echo "  结束时间: $(date '+%Y-%m-%d %H:%M:%S')" | tee -a "$REPORT_FILE"
-echo "  总耗时: ${TOTAL_TIME}ms" | tee -a "$REPORT_FILE"
-echo "  套件数: ${#SUITES[@]}" | tee -a "$REPORT_FILE"
+echo "  总耗时: ${TOTAL_TIME}s" | tee -a "$REPORT_FILE"
+echo "  套件数: 6" | tee -a "$REPORT_FILE"
+echo "  通过: $TOTAL_PASS" | tee -a "$REPORT_FILE"
 echo "  失败套件: $TOTAL_FAIL" | tee -a "$REPORT_FILE"
+echo "  总测试数: $TOTAL_TESTS" | tee -a "$REPORT_FILE"
 echo "  报告文件: $REPORT_FILE" | tee -a "$REPORT_FILE"
 
 if [ "$TOTAL_FAIL" -gt 0 ]; then
