@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://csi7ejgla76lo"]
 
 [ext_resource type="Script" uid="uid://rt0ffh74fgy2" path="res://ui/main_menu.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/ui/save_load_menu.tscn" id="2_saveload"]
 
 [node name="MainMenu" type="Control" unique_id=1635507438]
 layout_mode = 3
@@ -102,3 +103,5 @@ text = "存档"
 [connection signal="pressed" from="CenterContainer/VBox/OptionsButton" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/QuitButton" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="SaveMenuButton" to="." method="_on_save_menu_pressed"]
+
+[node name="SaveLoadMenu" parent="." instance=ExtResource("2_saveload")]

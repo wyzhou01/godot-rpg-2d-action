@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/SaveLoadMenu.gd" id="1_sl"]
+
+[node name="SaveLoadMenu" type="CanvasLayer"]
+layer = 60
+script = ExtResource("1_sl")
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 340.0
+offset_top = 80.0
+offset_right = 940.0
+offset_bottom = 640.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+text = "Select Save Slot"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+
+[node name="Spacer1" type="Control" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="Slot1Button" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 60)
+text = "Slot 1
+[空]"
+
+[node name="Slot2Button" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 60)
+text = "Slot 2
+[空]"
+
+[node name="Slot3Button" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 60)
+text = "Slot 3
+[空]"
+
+[node name="AutoSlotButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 60)
+text = "Auto Save
+[空]"
+
+[node name="Spacer2" type="Control" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="BackButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Back"
+
+[node name="InfoLabel" type="Label" parent="."]
+offset_left = 340.0
+offset_top = 50.0
+offset_right = 940.0
+offset_bottom = 80.0
+text = "Select a slot to continue, or any empty slot to start new game"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)

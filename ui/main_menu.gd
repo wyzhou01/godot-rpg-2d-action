@@ -40,26 +40,25 @@ func _on_new_game_pressed() -> void:
 
 
 func _on_continue_pressed() -> void:
-	# 加载最近的有效存档（slot 0 优先，然后 1, 2, 3）
-	var save_data = {}
-	var slot_to_load = -1
-	for slot in [0, 1, 2, 3]:
-		if SaveSystem.has_save(slot):
-			save_data = SaveSystem.load_save(slot)
-			slot_to_load = slot
-			break
-	if slot_to_load < 0:
+	# 显示存档/读档菜单让用户选 slot
+	var save_menu = get_node_or_null("SaveLoadMenu")
+	if save_menu and save_menu.has_method("show_menu"):
+		save_menu.show_menu()
+	else:
+		# 退化：自动加载 slot 0
+		if SaveSystem.has_save(0):
+			var data = SaveSystem.load_save(0)
+			_apply_save_and_continue(data, "res://scenes/levels/chapter_1/chapter_1_intro.tscn")
+
+
+func _apply_save_and_continue(data: Dictionary, default_path: String) -> void:
+	if data.is_empty():
 		return
-
-	# 恢复到 GameState
-	if save_data.has("current_chapter"):
-		GameState.current_chapter = save_data.current_chapter
-	# ... 其他字段恢复
-
-	# 跳转到对应关卡
-	var level_path = save_data.get("current_level_path", "res://scenes/levels/chapter_1/chapter_1_intro.tscn")
+	if data.has("current_chapter"):
+		GameState.current_chapter = data.current_chapter
+	var level_path = data.get("current_level_path", default_path)
 	if level_path.is_empty():
-		level_path = "res://scenes/levels/chapter_1/chapter_1_intro.tscn"
+		level_path = default_path
 	SceneManager.transition_to_scene(level_path)
 
 
