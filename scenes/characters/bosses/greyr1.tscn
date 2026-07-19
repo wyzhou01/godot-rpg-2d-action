@@ -1,10 +1,41 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/bosses/Greyr1.gd" id="1_boss"]
 [ext_resource type="Script" path="res://scripts/core/Stats.gd" id="2_stats"]
 [ext_resource type="Script" path="res://scripts/core/HurtBox.gd" id="3_hurtbox"]
 [ext_resource type="Script" path="res://scripts/core/PlayerDetectionZone.gd" id="4_detect"]
 [ext_resource type="SpriteFrames" path="res://resources/bosses/greyr1_sprite_frames.tres" id="10_spriteframes"]
+
+
+[sub_resource type="Animation" id="Animation_boss_death"]
+length = 0.5
+loop_mode = 0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.4, 0.4, 0.4, 0.3)]
+}
+
+[sub_resource type="Animation" id="Animation_boss_idle"]
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.95, 0.95, 0.95, 1), Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="RectangleShape2D" id="Boss_collision"]
 [sub_resource type="RectangleShape2D" id="Boss_hurtbox"]
@@ -96,3 +127,5 @@ show_percentage = false
 theme_override_styles/fill = SubResource("BossHPBarStyle")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/death = SubResource("Animation_boss_death")
+anims/idle = SubResource("Animation_boss_idle")

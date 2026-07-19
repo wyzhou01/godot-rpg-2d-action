@@ -34,6 +34,27 @@ func _ready() -> void:
 
 	# 生成敌人
 	_spawn_enemies()
+	
+	# 监听 Boss 死亡（如果是 boss 场景）
+	var boss_node = find_child("Boss", true, false)
+	if boss_node == null:
+		boss_node = find_child("Greyr1", true, false)
+	if boss_node == null:
+		boss_node = find_child("Frost", true, false)
+	if boss_node == null:
+		boss_node = find_child("Rotlord", true, false)
+	if boss_node == null:
+		boss_node = find_child("Goldguard", true, false)
+	if boss_node == null:
+		boss_node = find_child("Fireheart", true, false)
+	if boss_node == null:
+		boss_node = find_child("Greendruid", true, false)
+	if boss_node == null:
+		boss_node = find_child("Onyx", true, false)
+	if boss_node:
+		var boss_stats = boss_node.get_node_or_null("Stats")
+		if boss_stats:
+			boss_stats.health_decreased_and_depleted.connect(_on_boss_defeated)
 
 
 func _spawn_enemies() -> void:
@@ -88,3 +109,13 @@ func _on_exit_entered(body: Node) -> void:
 func _on_intro_dialog_ended(_timeline: String) -> void:
 	# intro 对话结束，玩家可以移动
 	pass
+
+
+func _on_boss_defeated() -> void:
+	# Boss 死亡 → 2s 后进下一章
+	print("[", chapter_name, "] Boss defeated, going to next level in 2s")
+	await get_tree().create_timer(2.0).timeout
+	if SceneManager and SceneManager.has_method("transition_to_scene"):
+		SceneManager.transition_to_scene(next_scene)
+	else:
+		get_tree().change_scene_to_file(next_scene)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scenes/levels/chapter_6/chapter_6.gd" id="2_level"]
@@ -7,6 +7,7 @@
 [ext_resource type="TileSet" path="res://resources/tilesets/chapter_6_tileset.tres" id="20_tileset"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="30_hud"]
 [ext_resource type="Script" path="res://scripts/core/CameraFollow2D.gd" id="40_camera_follow"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bosses/greendruid.tscn" id="41_greendruid"]
 
 [sub_resource type="RectangleShape2D" id="Ground_shape"]
 [sub_resource type="RectangleShape2D" id="Exit_shape"]
@@ -49,7 +50,10 @@ position = Vector2(800, 300)
 
 position = Vector2(800, 300)
 
-[node name="BossEnemies" type="Node2D" parent="."]
+[node name="Greendruid" parent="." instance=ExtResource("41_greendruid")]
+position = Vector2(800, 300)
+
+
 
 [node name="KnightMinion1" parent="BossEnemies" instance=ExtResource("3_knight")]
 position = Vector2(500, 300)
