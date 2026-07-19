@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/Fragment.gd" id="1_frag"]
+
+[sub_resource type="CircleShape2D" id="Frag_shape"]
+radius = 20.0
+
+[node name="Fragment" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_frag")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Frag_shape")
+
+[node name="Sprite2D" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(32, 32)
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+color = Color(1, 0.85, 0.3, 1)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -30.0
+offset_top = -40.0
+offset_right = 30.0
+offset_bottom = -20.0
+text = "✦"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
