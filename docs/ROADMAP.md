@@ -39,6 +39,12 @@ Phase 0       Phase 1       Phase 2-3     Phase 4
 - 7 章 boss 场景都加 PauseMenu
 - 详见 `docs/PHASE_1_DONE.md`
 
+## ✅ Phase 2 完成（7 碎片 HUD + Save/Load）
+- 7 碎片 HUD 实时显示 + 死亡计数 + 章节名
+- Checkpoint 自动存档（玩家走过旗子 → save）
+- SaveLoadMenu 4 槽位选择（主菜单 Continue）
+- 详见 `docs/PHASE_2_DONE.md`
+
 ---
 
 ## 📋 Phase 0: 架构重构（预计 1-3 天）
