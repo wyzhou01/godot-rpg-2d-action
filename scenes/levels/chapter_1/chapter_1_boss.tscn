@@ -10,7 +10,9 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/bosses/greyr1.tscn" id="41_greyr1"]
 
 [sub_resource type="RectangleShape2D" id="Ground_shape"]
+size = Vector2(1280, 64)
 [sub_resource type="RectangleShape2D" id="Exit_shape"]
+size = Vector2(60, 100)
 
 [node name="Chapter1Boss" type="Node2D"]
 script = ExtResource("2_level")
@@ -22,7 +24,6 @@ offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.15, 0.18, 0.15, 1.0)
 
-
 [node name="HUD" parent="." instance=ExtResource("30_hud")]
 [node name="Ground" type="StaticBody2D" parent="."]
 position = Vector2(0, 400)
@@ -30,12 +31,10 @@ position = Vector2(0, 400)
 [node name="GroundCollision" type="CollisionShape2D" parent="Ground"]
 position = Vector2(640, 32)
 shape = SubResource("Ground_shape")
-
 size = Vector2(1280, 64)
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
 position = Vector2(100, 300)
-
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640, 360)
@@ -61,7 +60,6 @@ position = Vector2(1700, 360)
 
 [node name="ExitCollision" type="CollisionShape2D" parent="ExitTrigger"]
 shape = SubResource("Exit_shape")
-
 size = Vector2(60, 100)
 
 [node name="MusicStreamPlayer" type="AudioStreamPlayer" parent="."]

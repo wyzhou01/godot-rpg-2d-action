@@ -147,10 +147,10 @@ func play_anim(name: String) -> void:
 # ===== 方向 =====
 func _update_sprite_direction() -> void:
 	if velocity.x > 0:
-		sprite.scale.x = -1
+		sprite.scale.x = 1
 		facing = 1
 	elif velocity.x < 0:
-		sprite.scale.x = 1
+		sprite.scale.x = -1
 		facing = -1
 
 

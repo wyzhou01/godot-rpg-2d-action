@@ -150,7 +150,7 @@ func _state_run(delta: float) -> void:
 	else:
 		_change_state(PlayerState.IDLE)
 		return
-	play_anim("run")
+	play_anim("walk")
 	if not is_on_floor():
 		_change_state(PlayerState.FALL)
 	elif input_jump_pressed:
@@ -300,9 +300,9 @@ func _on_death() -> void:
 func _update_sprite_direction() -> void:
 	if velocity.x > 0:
 		facing = 1
-		sprite.scale.x = -1
+		sprite.scale.x = 1
 		hitbox_pivot.scale.x = 1
 	elif velocity.x < 0:
 		facing = -1
-		sprite.scale.x = 1
+		sprite.scale.x = -1
 		hitbox_pivot.scale.x = -1

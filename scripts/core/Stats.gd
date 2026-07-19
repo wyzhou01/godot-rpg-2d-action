@@ -22,6 +22,8 @@ var health: int:
 	set(value):
 		var prev = health
 		var new_value = clampi(value, 0, max_health)
+		# Bug 修复: 保存 prev 在赋值前（但 prev 已读旧值）
+		# 实际 GDScript 中 prev = health 读的是当前值（赋值前），正确
 		health = new_value
 		if health < prev:
 			if health <= 0:
