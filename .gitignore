@@ -29,3 +29,4 @@ Thumbs.db
 # Original asset downloads (keep extracted assets/ but skip downloads)
 assets/_downloads/
 *.zip
+test_report.log
