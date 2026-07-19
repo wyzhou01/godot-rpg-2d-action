@@ -6,21 +6,25 @@ extends CanvasLayer
 @onready var panel: PanelContainer = $Panel
 @onready var slot_buttons: Array = []
 @onready var info_label: Label = $InfoLabel
-@onready var back_button: Button = $BackButton
+@onready var back_button: Button = $Panel/VBox/BackButton
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	panel.visible = false
+	# 等一帧确保子节点就绪
+	await get_tree().process_frame
 	slot_buttons = [
-		$VBox/Slot1Button,
-		$VBox/Slot2Button,
-		$VBox/Slot3Button,
-		$VBox/AutoSlotButton,
+		$Panel/VBox/Slot1Button,
+		$Panel/VBox/Slot2Button,
+		$Panel/VBox/Slot3Button,
+		$Panel/VBox/AutoSlotButton,
 	]
 	for i in slot_buttons.size():
-		slot_buttons[i].pressed.connect(_on_slot_pressed.bind(i))
-	if back_button:
+		var btn = slot_buttons[i]
+		if btn and btn.has_signal("pressed"):
+			btn.pressed.connect(_on_slot_pressed.bind(i))
+	if back_button and back_button.has_signal("pressed"):
 		back_button.pressed.connect(_on_back_pressed)
 
 

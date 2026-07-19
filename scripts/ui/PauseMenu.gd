@@ -19,12 +19,14 @@ func _ready() -> void:
 	# 默认隐藏
 	overlay.visible = false
 	panel.visible = false
+	# 等一帧确保子节点就绪
+	await get_tree().process_frame
 	# 连接按钮
-	if resume_button:
+	if resume_button and resume_button.has_signal("pressed"):
 		resume_button.pressed.connect(_on_resume)
-	if restart_button:
+	if restart_button and restart_button.has_signal("pressed"):
 		restart_button.pressed.connect(_on_restart)
-	if quit_button:
+	if quit_button and quit_button.has_signal("pressed"):
 		quit_button.pressed.connect(_on_quit)
 
 
