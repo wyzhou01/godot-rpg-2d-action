@@ -15,27 +15,22 @@ const KNIGHT_SCENE := "res://scenes/characters/enemies/knight.tscn"
 
 
 func _ready() -> void:
-	# 显示章节 intro 对话
-	if show_intro_dialog and intro_dialog_path and DialogueHelper:
-		DialogueHelper.dialogue_ended.connect(_on_intro_dialog_ended, CONNECT_ONE_SHOT)
-		DialogueHelper.show(intro_dialog_path)
-		await DialogueHelper.dialogue_ended
-	# 找 Player
+	# 1. 找 Player
 	player = get_tree().get_first_node_in_group("player")
 	if player:
 		var stats = player.get_node_or_null("Stats")
 		if stats:
 			stats.health_decreased_and_depleted.connect(_on_player_died)
 
-	# 找 ExitTrigger
+	# 2. 找 ExitTrigger
 	var exit_trigger = find_child("ExitTrigger", true, false)
 	if exit_trigger:
 		exit_trigger.body_entered.connect(_on_exit_entered)
 
-	# 生成敌人
+	# 3. 生成敌人
 	_spawn_enemies()
 	
-	# 监听 Boss 死亡（如果是 boss 场景）
+	# 4. 监听 Boss 死亡（早注册，避免时序问题）
 	var boss_node = find_child("Boss", true, false)
 	if boss_node == null:
 		boss_node = find_child("Greyr1", true, false)
@@ -56,7 +51,11 @@ func _ready() -> void:
 		if boss_stats:
 			boss_stats.health_decreased_and_depleted.connect(_on_boss_defeated)
 
-
+	# 5. 显示章节 intro 对话（最后才 await，让玩家可以先操作）
+	if show_intro_dialog and intro_dialog_path and DialogueHelper:
+		DialogueHelper.dialogue_ended.connect(_on_intro_dialog_ended, CONNECT_ONE_SHOT)
+		DialogueHelper.show(intro_dialog_path)
+		await DialogueHelper.dialogue_ended
 func _spawn_enemies() -> void:
 	var spawn_points = find_child("SpawnPoints", true, false)
 	if not spawn_points:

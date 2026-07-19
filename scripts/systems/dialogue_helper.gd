@@ -1,22 +1,17 @@
 ## Simple Dialogue Manager (autoload)
 ##
-## 自实现的轻量级对话系统（替代 Dialogic 插件，因为 Dialogic 2.0-Alpha 不兼容 Godot 4.6）
+## 自实现的轻量级对话系统（替代 Dialogic 插件）
 ##
 ## 用法:
-##   DialogueHelper.show("res://dialogs/chapter_1_boss_intro.json")
+##   DialogueHelper.show("res://dialogs/chapter_1_intro.json")
 ##   await DialogueHelper.dialogue_ended
-##
-## 对话文件格式 (.json):
-## {
-##   "lines": [
-##     {"character": "Player", "text": "...", "expression": "normal"}
-##   ]
-## }
 
 extends Node
-## 关键修复：process_mode = ALWAYS 让 _input 在任何时候都响应
-## 不使用 get_tree().paused（会冻结 _process 推进）
-## 直接用 _input 处理 ui_accept
+## 关键修复：
+## 1. process_mode = ALWAYS 让 _input 始终响应
+## 2. UI 用 call_deferred 添加（避免在 _ready 中 add_child 失败）
+## 3. _setup_ui 改为 async，await 添加完成再显示第一行
+## 4. 不使用 get_tree().paused（会冻结）
 
 signal dialogue_started(timeline: String)
 signal dialogue_line_shown(character: String, text: String)
@@ -37,35 +32,35 @@ var _dialogue_layer: CanvasLayer = null
 
 
 func _ready() -> void:
-	# ALWAYS：即使其他节点 paused，DialogueHelper 仍处理输入
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 
-## 显示一个对话
+## 显示一个对话（async，UI 创建后再显示第一行）
 func show(timeline_path: String) -> void:
 	if _is_showing:
-		# 强制清理旧状态
-		_is_showing = false
-		if _dialogue_layer and is_instance_valid(_dialogue_layer):
-			_dialogue_layer.queue_free()
-		_dialogue_layer = null
-		_dialogue_panel = null
-		_label = null
-		_character_label = null
-		_hint_label = null
+		# 强制清理旧状态（防御性）
+		_force_cleanup()
+	
 	_is_showing = true
 	_current_timeline = timeline_path
 	_line_index = 0
 	_load_timeline(timeline_path)
+	
 	if _timeline_data.is_empty() or not _timeline_data.has("lines") or _timeline_data["lines"].is_empty():
-		# 立即结束（无内容）
 		_is_showing = false
 		dialogue_ended.emit(_current_timeline)
 		_current_timeline = ""
 		return
+	
 	dialogue_started.emit(_current_timeline)
+	
+	# 异步创建 UI — 必须用 await process_frame
+	# 因为 _setup_ui 用 call_deferred 实际添加到 tree
 	_setup_ui()
-	# 显示第一行
+	await get_tree().process_frame  # 等一帧让 add_child 生效
+	await get_tree().process_frame  # 再等一帧确保子节点就绪
+	
+	# 现在 label 真的有效，显示第一行
 	_show_current_line()
 
 
@@ -89,33 +84,41 @@ func _load_timeline(path: String) -> void:
 
 
 func _setup_ui() -> void:
-	# 清理旧的
+	# 清理旧的（如果还在）
 	if _dialogue_layer and is_instance_valid(_dialogue_layer):
 		_dialogue_layer.queue_free()
+		_dialogue_layer = null
+	_dialogue_panel = null
+	_label = null
+	_character_label = null
+	_hint_label = null
 	
+	# 创建 CanvasLayer（顶级 UI，不受场景暂停影响）
 	_dialogue_layer = CanvasLayer.new()
 	_dialogue_layer.name = "DialogueLayer"
 	_dialogue_layer.layer = 100
 	_dialogue_layer.process_mode = Node.PROCESS_MODE_ALWAYS
-	get_tree().root.add_child(_dialogue_layer)
+	
+	# 用 call_deferred 添加到 root（避免在 _ready 中 add_child 失败）
+	get_tree().root.add_child.call_deferred(_dialogue_layer)
 	
 	# 半透明黑色背景遮罩
 	var overlay := ColorRect.new()
+	overlay.name = "DialogueOverlay"
 	overlay.color = Color(0, 0, 0, 0.4)
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.process_mode = Node.PROCESS_MODE_ALWAYS
-	_dialogue_layer.add_child(overlay)
 	
 	# 底部对话面板
 	_dialogue_panel = PanelContainer.new()
+	_dialogue_panel.name = "DialoguePanel"
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	_dialogue_panel.offset_left = 100
 	_dialogue_panel.offset_right = -100
 	_dialogue_panel.offset_top = -220
 	_dialogue_panel.offset_bottom = -20
 	_dialogue_panel.process_mode = Node.PROCESS_MODE_ALWAYS
-	# 半透明背景
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0, 0, 0, 0.85)
 	style.border_color = Color(0.8, 0.7, 0.3, 1)
@@ -128,19 +131,29 @@ func _setup_ui() -> void:
 	style.corner_radius_bottom_right = 8
 	style.corner_radius_bottom_left = 8
 	_dialogue_panel.add_theme_stylebox_override("panel", style)
+	
+	# 先 add overlay 到 layer（必须先 layer 存在，但 layer 是 deferred）
+	# 这里改顺序：先建 panel（独立），overlay 直接添加到 panel 内部
+	# 简单：把 panel 作为 layer 的子节点，然后 panel 内放 vbox
+	# 但 layer 是 deferred，所以 panel 也得 deferred
+	# 折中：先同步 add overlay 到 layer（layer 还不在 tree 但 add_child 可以工作）
+	_dialogue_layer.add_child(overlay)
 	_dialogue_layer.add_child(_dialogue_panel)
 	
 	var vbox := VBoxContainer.new()
+	vbox.name = "VBox"
 	vbox.process_mode = Node.PROCESS_MODE_ALWAYS
 	_dialogue_panel.add_child(vbox)
 	
 	_character_label = Label.new()
+	_character_label.name = "CharacterLabel"
 	_character_label.add_theme_font_size_override("font_size", 24)
 	_character_label.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
 	_character_label.process_mode = Node.PROCESS_MODE_ALWAYS
 	vbox.add_child(_character_label)
 	
 	_label = Label.new()
+	_label.name = "TextLabel"
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_label.custom_minimum_size = Vector2(0, 80)
 	_label.add_theme_font_size_override("font_size", 20)
@@ -149,7 +162,8 @@ func _setup_ui() -> void:
 	vbox.add_child(_label)
 	
 	_hint_label = Label.new()
-	_hint_label.text = "[按空格/回车/点击继续 →]"
+	_hint_label.name = "HintLabel"
+	_hint_label.text = "[按空格/回车继续]"
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hint_label.add_theme_font_size_override("font_size", 14)
 	_hint_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
@@ -175,6 +189,8 @@ func _show_current_line() -> void:
 	
 	if _label:
 		_label.text = text
+	else:
+		push_warning("DialogueHelper: _label is null, skipping line")
 	if _character_label:
 		_character_label.text = character
 	if _hint_label:
@@ -196,12 +212,21 @@ func _input(event: InputEvent) -> void:
 func _advance() -> void:
 	if not _is_showing:
 		return
-	# 检查是否到达最后
 	if _line_index >= _timeline_data.get("lines", []).size():
 		_end_dialogue()
 		return
-	# 显示下一行
 	_show_current_line()
+
+
+func _force_cleanup() -> void:
+	_is_showing = false
+	if _dialogue_layer and is_instance_valid(_dialogue_layer):
+		_dialogue_layer.queue_free()
+	_dialogue_layer = null
+	_dialogue_panel = null
+	_label = null
+	_character_label = null
+	_hint_label = null
 
 
 func _end_dialogue() -> void:

@@ -1,9 +1,8 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scenes/levels/chapter_6/chapter_6.gd" id="2_level"]
 [ext_resource type="PackedScene" path="res://scenes/characters/enemies/knight.tscn" id="3_knight"]
-[ext_resource type="PackedScene" path="res://scenes/characters/bosses/greendruid.tscn" id="RES_boss"]
 [ext_resource type="TileSet" path="res://resources/tilesets/chapter_6_tileset.tres" id="20_tileset"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="30_hud"]
 [ext_resource type="Script" path="res://scripts/core/CameraFollow2D.gd" id="40_camera_follow"]
@@ -15,6 +14,7 @@
 [node name="Chapter6Boss" type="Node2D"]
 script = ExtResource("2_level")
 next_scene = "res://scenes/levels/chapter_7/chapter_7_intro.tscn"
+intro_dialog_path = "res://dialogs/chapter_6_boss_intro.json"
 chapter_name = "Chapter 6"
 
 [node name="Background" type="ColorRect" parent="."]
@@ -45,7 +45,6 @@ script = ExtResource("40_camera_follow")
 position = Vector2(100, 300)
 
 [node name="BossSpawn" type="Marker2D" parent="."]
-[node name="Boss" parent="." instance=ExtResource("RES_boss")]
 position = Vector2(800, 300)
 
 position = Vector2(800, 300)
@@ -55,7 +54,9 @@ position = Vector2(800, 300)
 
 
 
-[node name="KnightMinion1" parent="BossEnemies" instance=ExtResource("3_knight")]
+[node name="BossEnemies" type="Node2D" parent="."]
+
+ parent="BossEnemies" instance=ExtResource("3_knight")]
 position = Vector2(500, 300)
 
 [node name="KnightMinion2" parent="BossEnemies" instance=ExtResource("3_knight")]
