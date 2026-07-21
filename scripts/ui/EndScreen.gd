@@ -6,12 +6,17 @@ extends CanvasLayer
 @onready var title_label: Label = $CenterContainer/VBox/Title
 @onready var stats_label: Label = $CenterContainer/VBox/Stats
 @onready var menu_button: Button = $CenterContainer/VBox/MenuButton
+@onready var settings_button: Button = $CenterContainer/VBox/SettingsButton
+
+var _settings_menu: CanvasLayer = null
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if menu_button:
 		menu_button.pressed.connect(_on_menu_pressed)
+	if settings_button:
+		settings_button.pressed.connect(_on_settings)
 	_show_stats()
 
 
@@ -48,3 +53,20 @@ func _on_menu_pressed() -> void:
 		SceneManager.goto_main_menu()
 	else:
 		get_tree().change_scene_to_file("res://ui/main_menu.tscn")
+
+
+func _on_settings() -> void:
+	# V2.4: 实例化 SettingsMenu (只一个实例)
+	if _settings_menu and is_instance_valid(_settings_menu):
+		return
+	var settings_scene = preload("res://scenes/ui/settings_menu.tscn")
+	_settings_menu = settings_scene.instantiate()
+	add_child(_settings_menu)
+	if _settings_menu.has_signal("closed"):
+		_settings_menu.closed.connect(_on_settings_closed, CONNECT_ONE_SHOT)
+
+
+func _on_settings_closed() -> void:
+	if _settings_menu and is_instance_valid(_settings_menu):
+		_settings_menu.queue_free()
+		_settings_menu = null
