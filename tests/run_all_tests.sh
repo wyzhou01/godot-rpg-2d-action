@@ -16,22 +16,27 @@ echo "  项目目录: $PROJECT_DIR" | tee -a "$REPORT_FILE"
 echo "==============================================================" | tee -a "$REPORT_FILE"
 echo "" | tee -a "$REPORT_FILE"
 
-# 套件 + 超时（秒）
-declare -A SUITES
-SUITES[scene_validation]=15
-SUITES[resources]=15
-SUITES[dialogue]=30
-SUITES[combat]=60
-SUITES[save_system]=15
-SUITES[e2e_full_game]=120
+# 套件 + 超时（秒）— 不用 bash 关联数组，macOS bash 3.2 不支持 -A
+suite_timeout() {
+    case "$1" in
+        scene_validation) echo 15 ;;
+        resources) echo 15 ;;
+        dialogue) echo 30 ;;
+        combat) echo 60 ;;
+        save_system) echo 15 ;;
+        e2e_full_game) echo 120 ;;
+        boss_names) echo 15 ;;
+        *) echo 30 ;;
+    esac
+}
 
 TOTAL_PASS=0
 TOTAL_FAIL=0
 TOTAL_TESTS=0
 TOTAL_TIME=0
 
-for suite in scene_validation resources dialogue combat save_system e2e_full_game; do
-    timeout=${SUITES[$suite]}
+for suite in scene_validation resources dialogue combat save_system e2e_full_game boss_names; do
+    timeout=$(suite_timeout "$suite")
     scene_path="res://tests/test_${suite}.tscn"
     
     echo "────────────────────────────────────────────────────────────" | tee -a "$REPORT_FILE"

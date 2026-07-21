@@ -3,9 +3,9 @@ extends CanvasLayer
 ##
 ## 玩家通关 Chapter 7 → game_complete 触发
 
-@onready var title_label: Label = $Title
-@onready var stats_label: Label = $Stats
-@onready var menu_button: Button = $MenuButton
+@onready var title_label: Label = $CenterContainer/VBox/Title
+@onready var stats_label: Label = $CenterContainer/VBox/Stats
+@onready var menu_button: Button = $CenterContainer/VBox/MenuButton
 
 
 func _ready() -> void:

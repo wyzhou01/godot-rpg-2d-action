@@ -4,6 +4,7 @@
 
 [node name="EndScreen" type="CanvasLayer"]
 layer = 100
+visible = false
 script = ExtResource("1_end")
 
 [node name="Background" type="ColorRect" parent="."]
