@@ -26,6 +26,7 @@ suite_timeout() {
         save_system) echo 15 ;;
         e2e_full_game) echo 120 ;;
         boss_names) echo 15 ;;
+        playthrough) echo 90 ;;
         *) echo 30 ;;
     esac
 }
@@ -35,7 +36,7 @@ TOTAL_FAIL=0
 TOTAL_TESTS=0
 TOTAL_TIME=0
 
-for suite in scene_validation resources dialogue combat save_system e2e_full_game boss_names; do
+for suite in scene_validation resources dialogue combat save_system e2e_full_game boss_names playthrough; do
     timeout=$(suite_timeout "$suite")
     scene_path="res://tests/test_${suite}.tscn"
     

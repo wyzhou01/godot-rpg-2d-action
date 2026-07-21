@@ -1,7 +1,7 @@
-# EternalDuty — 最终交付报告（V2.1）
+# EternalDuty — 最终交付报告（V2.2）
 
 > **2D 像素动作 ARPG** | Godot 4.6 + Kenney 美术包 + 自建测试套件
-> 7 章 · 7 Boss · 3 种敌人 · **144 自动化测试 100% 通过** · 可玩
+> 7 章 · 7 Boss · 3 种敌人 · **148 自动化测试 100% 通过** · 可玩
 
 ---
 
@@ -10,33 +10,43 @@
 | 指标 | 数值 |
 |------|------|
 | **场景 Parse 错误** | **0 / 30** |
-| **自动化测试** | **144 / 144 通过**（7 套件，42s） |
-| **端到端 E2E** | **7/7 章 + 7/7 Boss 战胜** |
+| **自动化测试** | **148 / 148 通过**（8 套件，60s） |
+| **端到端 E2E** | **7/7 章 + 7/7 Boss 战胜 + 7→通关 game_complete dialog** |
 | **.gd 脚本** | 34 个 |
 | **.tscn 场景** | 30 个 |
 | **美术资源** | 273 PNG + 12 audio |
 | **SpriteFrames** | 11 个（Player + 7 Boss + 3 Enemy）|
 | **TileSet** | 7 个（每章独立）|
 | **对话文件** | 21 个 .json（7 intro + 7 boss intro + 7 boss defeat）|
-| **Git commits** | 10 个原子 commit |
+| **Git commits** | 12 个原子 commit |
 | **Git status** | 干净 |
-| **测试套件** | 自建零依赖（7 套件 + Bash 主入口 + CI）|
+| **测试套件** | 自建零依赖（8 套件 + Bash 主入口 + CI）|
 
-## 🆕 V2.1 更新 (2026-07-21)
+## 🆕 V2.2 更新 (2026-07-21)
 
-相比 V2.0 增加/修了三件事：
+相比 V2.1 增加/修了四件事：
 
-1. **修复 EndScreen @onready 路径 bug**（之前 Ch7 加载时报 `Node not found: Stats/MenuButton`）
-   - 改用完整路径 `$CenterContainer/VBox/Stats`、`$CenterContainer/VBox/MenuButton`
-   - `end_screen.tscn` 默认 `visible = false`（通关前不遮挡画面）
-2. **修复 `run_all_tests.sh` 在 macOS bash 3.2 下超时失效**
-   - 原 `declare -A SUITES` 在 macOS 默认 bash 不支持 → 所有套件超时统一坏掉
-   - 改为 `suite_timeout() case` 函数
-3. **新增 `test_boss_names` 套件**（7→7 套件，134→144 测试）
-   - 验证 7 Boss 名字唯一
-   - 验证 7 Boss 场景加载
-   - 验证每个 Boss 都有 Stats 子节点
-   - 防止 7-19 那种"通用 Boss + 专名 Boss 双节点"污染复发
+1. **修复 7 个 chapter boss 信号链真 bug**（playthrough 测试时发现）
+   - **Bug A**: chapter_X._on_boss_defeated 全程 **漏调** `GameState.defeat_boss(boss_name)`
+     → `game_state.boss_defeated` 信号链断裂，cross-chapter boss 进度 / 章节切换 / 存档都没数据流
+   - **Bug B**: chapter_X._on_boss_defeated 全程 **dialog 路径 copy-paste 错误**
+     → Ch1-6 全部显示 `chapter_1_boss_defeat.json`，跳章节后对话文本完全对不上
+     → 改为 `chapter_X_boss_defeat.json`（X=1..7）
+   - **修真**: 7 个章节脚本都修正
+2. **新增 `test_playthrough` 套件**（7→8 套件，144→148 测试）
+   - Driver 模式借鉴 godot-test-driver（GDScript 自建，零依赖）
+   - 不用 `Input.parse_input_event`（已知 Godot 4 连续输入 bug #95716）
+   - 直接调 `Stats.take_damage` 触发战斗结局
+   - 监听 `GameState.boss_defeated` + `DialogueHelper.dialogue_started` 信号链
+   - 验证：主菜单 + 7 章节 intro 加载 + 7 Boss 死亡触发信号链 + Ch7 通关 game_complete dialog
+3. **驱动 headless 真通关路径验证** — 跑完整 7 章通关信号链，第一次能在 headless 里"自己验证一遍"
+4. **GitHub Actions CI 自动跑 playthrough** — `run_all_tests.sh` 包含新套件，CI 同步从 144 → 148
+
+## 🆕 V2.1 (回顾)
+
+- 修复 EndScreen @onready 路径 bug（Ch7 加载时报 `Node not found: Stats/MenuButton`）
+- 修复 `run_all_tests.sh` 在 macOS bash 3.2 下超时失效 (`declare -A` 关联数组)
+- 新增 `test_boss_names` 套件（防 Ch2-7 双 Boss 节点污染复发）
 
 ## 🎮 怎么玩
 
@@ -50,7 +60,7 @@ open /Applications/Godot.app   # F5 / Play
 ## 🤖 自动化测试（用户无需手动测试）
 
 ```bash
-# 一键跑全部 144 测试
+# 一键跑全部 148 测试
 bash tests/run_all_tests.sh
 
 # 输出：
@@ -61,7 +71,8 @@ bash tests/run_all_tests.sh
 # ✅ save_system: 6/6
 # ✅ e2e_full_game: 3/3（14 阶段，7/7 Boss defeat）
 # ✅ boss_names: 3/3（7 名字唯一 + 7 场景加载 + 7 Stats 节点）
-# 总耗时: 42s
+# ✅ playthrough: 4/4（主菜单 + 7 intro + 7 Boss 信号链 + game_complete dialog）
+# 总耗时: 60s
 ```
 
 **CI 自动跑**（每次 push / PR）：`.github/workflows/headless-validate.yml`

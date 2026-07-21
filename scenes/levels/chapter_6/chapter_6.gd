@@ -64,10 +64,12 @@ func _on_boss_defeated() -> void:
 	# Boss 死亡 → 显示 Fragment + 启用 Portal
 	boss_killed = true
 	print("[", chapter_name, "] Boss defeated!")
+	if _boss and GameState:
+		GameState.defeat_boss(_boss.name)
 	_enable_portal()
 	# 弹对话
 	if DialogueHelper:
-		DialogueHelper.show("res://dialogs/chapter_1_boss_defeat.json")
+		DialogueHelper.show("res://dialogs/chapter_6_boss_defeat.json")
 
 
 func _disable_portal() -> void:
