@@ -28,6 +28,7 @@ suite_timeout() {
         boss_names) echo 15 ;;
         playthrough) echo 90 ;;
         combat_battle) echo 90 ;;
+        settings) echo 30 ;;
         *) echo 30 ;;
     esac
 }
@@ -37,7 +38,7 @@ TOTAL_FAIL=0
 TOTAL_TESTS=0
 TOTAL_TIME=0
 
-for suite in scene_validation resources dialogue combat save_system e2e_full_game boss_names playthrough combat_battle; do
+for suite in scene_validation resources dialogue combat save_system e2e_full_game boss_names playthrough combat_battle settings; do
     timeout=$(suite_timeout "$suite")
     scene_path="res://tests/test_${suite}.tscn"
     
@@ -97,7 +98,7 @@ echo "  最终报告" | tee -a "$REPORT_FILE"
 echo "==============================================================" | tee -a "$REPORT_FILE"
 echo "  结束时间: $(date '+%Y-%m-%d %H:%M:%S')" | tee -a "$REPORT_FILE"
 echo "  总耗时: ${TOTAL_TIME}s" | tee -a "$REPORT_FILE"
-echo "  套件数: 8" | tee -a "$REPORT_FILE"
+echo "  套件数: 9" | tee -a "$REPORT_FILE"
 echo "  通过: $TOTAL_PASS" | tee -a "$REPORT_FILE"
 echo "  失败套件: $TOTAL_FAIL" | tee -a "$REPORT_FILE"
 echo "  总测试数: $TOTAL_TESTS" | tee -a "$REPORT_FILE"

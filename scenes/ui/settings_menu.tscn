@@ -1,0 +1,116 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/SettingsMenu.gd" id="1_settings"]
+
+[node name="SettingsMenu" type="CanvasLayer"]
+layer = 60
+script = ExtResource("1_settings")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.85)
+mouse_filter = 0
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchor_left = 0.5.0
+anchor_top = 0.5.0
+anchor_right = 0.5.0
+anchor_bottom = 0.5.0
+offset_left = -240.0
+offset_top = -260.0
+offset_right = 240.0
+offset_bottom = 260.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+text = "SETTINGS"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+
+[node name="Spacer1" type="Control" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="MasterRow" type="HBoxContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+
+[node name="Label" type="Label" parent="Panel/VBox/MasterRow"]
+custom_minimum_size = Vector2(140, 0)
+text = "Master Volume"
+theme_override_font_sizes/font_size = 18
+
+[node name="MasterSlider" type="HSlider" parent="Panel/VBox/MasterRow"]
+custom_minimum_size = Vector2(220, 0)
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/VBox/MasterRow"]
+custom_minimum_size = Vector2(60, 0)
+text = "100%"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 18
+
+[node name="MusicRow" type="HBoxContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+
+[node name="Label" type="Label" parent="Panel/VBox/MusicRow"]
+custom_minimum_size = Vector2(140, 0)
+text = "Music Volume"
+theme_override_font_sizes/font_size = 18
+
+[node name="MusicSlider" type="HSlider" parent="Panel/VBox/MusicRow"]
+custom_minimum_size = Vector2(220, 0)
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/VBox/MusicRow"]
+custom_minimum_size = Vector2(60, 0)
+text = "100%"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 18
+
+[node name="SFXRow" type="HBoxContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+
+[node name="Label" type="Label" parent="Panel/VBox/SFXRow"]
+custom_minimum_size = Vector2(140, 0)
+text = "SFX Volume"
+theme_override_font_sizes/font_size = 18
+
+[node name="SFXSlider" type="HSlider" parent="Panel/VBox/SFXRow"]
+custom_minimum_size = Vector2(220, 0)
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="ValueLabel" type="Label" parent="Panel/VBox/SFXRow"]
+custom_minimum_size = Vector2(60, 0)
+text = "100%"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 18
+
+[node name="Spacer2" type="Control" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 10)
+
+[node name="FullscreenRow" type="HBoxContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+
+[node name="Label" type="Label" parent="Panel/VBox/FullscreenRow"]
+custom_minimum_size = Vector2(200, 0)
+text = "Fullscreen"
+theme_override_font_sizes/font_size = 18
+
+[node name="FullscreenCheck" type="CheckButton" parent="Panel/VBox/FullscreenRow"]
+text = ""
+
+[node name="Spacer3" type="Control" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="BackButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+text = "Back (Esc)"

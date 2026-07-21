@@ -28,12 +28,24 @@ class_name BaseBoss extends CharacterBody2D
 
 
 func _safe_play(anim_name: String) -> void:
-	# Bug 修复: AnimationPlayer 节点存在但无动画时 (项目内 7 个 Boss tscn 都是空库),
-	# 直接 play 会 ERROR print 一堆 "Animation not found"。
-	# has_animation 检查后才播，避免噪音日志。
+	# 修真 V2.4: 双后端 fallback
+	# 1. 优先 AnimationPlayer（动画库里有就走 AnimationPlayer）
+	# 2. 否则走 AnimatedSprite2D.sprite_frames（项目里 7 个 Boss 都是 SpriteFrames 路径）
+	# 这样未来修真 SpriteFrames 加 attack/death 帧能直接看到效果，不依赖 AnimationPlayer 库（空库）
 	if animation_player and animation_player.has_animation(anim_name):
 		if animation_player.current_animation != anim_name:
 			animation_player.play(anim_name)
+	elif sprite and sprite.sprite_frames and sprite.sprite_frames.has_animation(anim_name):
+		if sprite.animation != anim_name:
+			sprite.play(anim_name)
+
+
+func _safe_play_fallback(anim_name: String, fallback_name: String) -> void:
+	# 修真 V2.4: death 动画缺失时 fallback 到 hurt，让视觉有反馈 (Boss 死亡不是 idle 站着)
+	if not (animation_player and animation_player.has_animation(anim_name)) \
+		and not (sprite and sprite.sprite_frames and sprite.sprite_frames.has_animation(anim_name)):
+		anim_name = fallback_name
+	_safe_play(anim_name)
 
 enum BossState { IDLE, CHASE, ATTACK, HURT, DEATH }
 var state: BossState = BossState.IDLE
@@ -203,7 +215,7 @@ func _on_hurt() -> void:
 
 func _on_defeated() -> void:
 	state = BossState.DEATH
-	_safe_play("death")
+	_safe_play_fallback("death", "hurt")
 	set_physics_process(false)
 	_trigger_post_battle_dialogue()
 	get_tree().create_timer(2.0).timeout.connect(queue_free)

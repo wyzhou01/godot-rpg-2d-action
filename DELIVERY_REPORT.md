@@ -18,9 +18,24 @@
 | **SpriteFrames** | 11 个（Player + 7 Boss + 3 Enemy）|
 | **TileSet** | 7 个（每章独立）|
 | **对话文件** | 21 个 .json（7 intro + 7 boss intro + 7 boss defeat）|
-| **Git commits** | 12 个原子 commit |
+| **Git commits** | 13 个原子 commit |
 | **Git status** | 干净 |
-| **测试套件** | 自建零依赖（8 套件 + Bash 主入口 + CI）|
+| **测试套件** | 自建零依赖（9 套件 + Bash 主入口 + CI）|
+
+## 🆕 V2.4 更新 (2026-07-22)
+
+相比 V2.3 增加/修真一件事 — **Phase 4 起步（Settings UI）**:
+
+1. **新增 `settings` 套件** (155 → 160 测试):
+   - Settings 场景能加载
+   - 运行时检查/添加 Master/Music/SFX bus
+   - 音量变化真实反映到 AudioServer
+   - ConfigFile 持久化到 `user://settings.cfg`
+2. **`scripts/ui/SettingsMenu.gd`** — CanvasLayer + 3 音量 slider (Master/Music/SFX) + 全屏 toggle + 返回按钮 + ConfigFile 持久化
+3. **`scenes/ui/settings_menu.tscn`** — 完整 UI 树
+4. **PauseMenu 修真** — 加 Settings 按钮 (esc → Settings → 调音量 → Back)
+5. **修真 `_ensure_bus()` 逻辑 bug**: `var new_idx := AudioServer.bus_count` 修真为 `AudioServer.bus_count - 1` (add_bus 后新 bus 是最后一个, 不是原 count)
+6. **修真变量类型推断**: Godot 4.6 严格模式 `Warning treated as error`, 修真 4 处 `var v := cfg.get_value(...)` → `var v: float = ...`
 
 ## 🆕 V2.3 更新 (2026-07-22)
 

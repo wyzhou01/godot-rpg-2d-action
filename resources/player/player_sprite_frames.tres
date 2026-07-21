@@ -101,4 +101,21 @@ animations = [{
 "loop": true,
 "name": &"walk",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_iur1n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_rf8pg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_4y0of")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_iur1n")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 16.0
 }]

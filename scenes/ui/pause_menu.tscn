@@ -41,3 +41,7 @@ text = "Restart Chapter"
 [node name="QuitButton" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 50)
 text = "Quit to Main Menu"
+
+[node name="SettingsButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+text = "Settings"
