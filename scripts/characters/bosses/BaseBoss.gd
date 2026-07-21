@@ -26,6 +26,15 @@ class_name BaseBoss extends CharacterBody2D
 @onready var detection: PlayerDetectionZone = $PlayerDetectionZone
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
+
+func _safe_play(anim_name: String) -> void:
+	# Bug 修复: AnimationPlayer 节点存在但无动画时 (项目内 7 个 Boss tscn 都是空库),
+	# 直接 play 会 ERROR print 一堆 "Animation not found"。
+	# has_animation 检查后才播，避免噪音日志。
+	if animation_player and animation_player.has_animation(anim_name):
+		if animation_player.current_animation != anim_name:
+			animation_player.play(anim_name)
+
 enum BossState { IDLE, CHASE, ATTACK, HURT, DEATH }
 var state: BossState = BossState.IDLE
 var current_phase: int = 1  # 1/2/3
@@ -188,15 +197,13 @@ func _on_phase_changed(new_phase: int) -> void:
 
 # ===== 信号回调 =====
 func _on_hurt() -> void:
-	if animation_player:
-		animation_player.play("hurt")
+	_safe_play("hurt")
 	velocity.x = facing * -200
 
 
 func _on_defeated() -> void:
 	state = BossState.DEATH
-	if animation_player:
-		animation_player.play("death")
+	_safe_play("death")
 	set_physics_process(false)
 	_trigger_post_battle_dialogue()
 	get_tree().create_timer(2.0).timeout.connect(queue_free)
@@ -220,5 +227,4 @@ func _update_sprite_direction() -> void:
 
 
 func play_anim(anim_name: String) -> void:
-	if animation_player and animation_player.current_animation != anim_name:
-		animation_player.play(anim_name)
+	_safe_play(anim_name)

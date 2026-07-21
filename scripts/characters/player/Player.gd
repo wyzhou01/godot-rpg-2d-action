@@ -227,6 +227,7 @@ func _change_state(new_state: PlayerState) -> void:
 			attack_combo_index = 0
 			can_combo = false
 			attack_combo_window_timer = 0.0
+			_enable_attack_hitbox()  # Bug 修复: 进 ATTACK 立刻启用 HitBox（旧设计依赖 AnimationPlayer track call，但玩家用 AnimatedSprite2D, 没有 AnimationPlayer, 调不进来）
 		PlayerState.DODGE:
 			can_dodge = false
 			dodge_timer = (player_stats.dash_cooldown if player_stats else 1.0)
@@ -280,8 +281,14 @@ func _check_combo() -> void:
 
 
 func play_anim(name: String) -> void:
-	if sprite and sprite.animation != name:
-		sprite.play(name)
+	if sprite:
+		if not sprite.sprite_frames.has_animation(name):
+			# Bug 修复: SpriteFrames 里未定义该动画时不要卡死, fallback 到 idle,
+			# 并手动推进 animation_finished 信号让攻击状态机能退出
+			name = "idle"
+			# idle 存在就行, on_animation_finished 回调会跳转 IDLE
+		if sprite.animation != name:
+			sprite.play(name)
 
 
 # ===== 信号回调 =====

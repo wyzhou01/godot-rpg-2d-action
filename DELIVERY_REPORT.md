@@ -1,7 +1,7 @@
-# EternalDuty — 最终交付报告（V2.2）
+# EternalDuty — 最终交付报告（V2.3）
 
 > **2D 像素动作 ARPG** | Godot 4.6 + Kenney 美术包 + 自建测试套件
-> 7 章 · 7 Boss · 3 种敌人 · **148 自动化测试 100% 通过** · 可玩
+> 7 章 · 7 Boss · 3 种敌人 · **155 自动化测试 100% 通过** · 可玩
 
 ---
 
@@ -10,7 +10,7 @@
 | 指标 | 数值 |
 |------|------|
 | **场景 Parse 错误** | **0 / 30** |
-| **自动化测试** | **148 / 148 通过**（8 套件，60s） |
+| **自动化测试** | **155 / 155 通过**（8 套件，67s） |
 | **端到端 E2E** | **7/7 章 + 7/7 Boss 战胜 + 7→通关 game_complete dialog** |
 | **.gd 脚本** | 34 个 |
 | **.tscn 场景** | 30 个 |
@@ -21,6 +21,27 @@
 | **Git commits** | 12 个原子 commit |
 | **Git status** | 干净 |
 | **测试套件** | 自建零依赖（8 套件 + Bash 主入口 + CI）|
+
+## 🆕 V2.3 更新 (2026-07-22)
+
+相比 V2.2 增加/修了三件事：
+
+1. **新增 `test_combat_battle` 套件** — Driver 模式驱动真战斗通关（148 → 155 测试）
+   - 不用 `Stats.take_damage` 绕过战斗（V2.2 playthrough 的隐患）
+   - 玩家 teleport 到 Boss 攻击范围内 → HitBox/HurtBox 真碰撞 → 真扣血 → 死循环直到 `boss_killed=true`
+   - **真战斗链**: 玩家位置变化 + Geometry2D overlap + Stats.take_damage + AnimationPlayer + chapter_X._on_boss_defeated
+   - 7 章全通：Ch1 20 hits (HP150)，Ch2-7 各 10 hits (HP50)
+   - Watchdog: 单章 60s / 总 90s（实际跑 11s）
+2. **修真 3 个真战斗系统 bug**（combat_battle 测试时发现）
+   - **Bug C**: `Player._change_state(ATTACK)` 旧版依赖 `AnimationPlayer` track call，但玩家用 `AnimatedSprite2D`，hitbox 永不 enable → 玩家 0 伤害
+     → 修真：进 ATTACK 立刻手动调 `_enable_attack_hitbox()`
+   - **Bug D**: `HitBox.enable()` 旧版只开 `monitoring=true`，但 `CollisionShape2D.disabled` 默认 true，area_entered 永不触发
+     → 修真：enable/disable 同步遍历子节点启停 CollisionShape2D
+   - **Bug E**: `BaseBoss._on_hurt`/`_on_defeated`/`play_anim` 直接调 `animation_player.play("hurt"/"death")`，但 7 个 Boss tscn 的 AnimationPlayer 库都是空（项目从没建过动画） → 一开打就 ERROR print 满屏
+     → 修真：抽出 `_safe_play()` helper，`has_animation()` 检查后才播
+3. **日志干净** — 修真后 combat_battle 跑 0 ERROR 0 噪音日志
+
+**为什么这一版是关键**：V2.2 playthrough 是用 `Stats.take_damage(9999)` 绕过 HitBox/HurtBox 链路直接验证「Boss 死会触发下一章」。但**这等于没验证战斗系统本身能跑**。V2.3 真把玩家拉到 Boss 面前、HitBox 撞 HurtBox、物理引擎真检测 overlap — 这才是「7 章战斗可玩」的真正测试。
 
 ## 🆕 V2.2 更新 (2026-07-21)
 

@@ -39,8 +39,16 @@ func _ready() -> void:
 ## 启用攻击窗口（动画用）
 func enable() -> void:
 	monitoring = true
+	# 同时启用 CollisionShape2D — 没有这个 shape 等于不参与碰撞，area_entered 永不触发
+	# Bug 修复: 原版只开 monitoring 不开 shape，导致玩家始终打不到敌人
+	for shape in get_children():
+		if shape is CollisionShape2D:
+			shape.disabled = false
 
 
 ## 禁用攻击窗口（动画用）
 func disable() -> void:
 	monitoring = false
+	for shape in get_children():
+		if shape is CollisionShape2D:
+			shape.disabled = true
