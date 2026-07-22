@@ -64,7 +64,7 @@ jobs:
           path: /tmp/godot.log
 
   automated-tests:
-    name: Automated Test Suite (160 tests)
+    name: Automated Test Suite (201 tests)
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
