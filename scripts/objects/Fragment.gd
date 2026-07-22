@@ -19,7 +19,15 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("player"):
+		if PlayerData.has_fragment(fragment_id):
+			return  # 已收集不重复
 		PlayerData.add_fragment(fragment_id)
+		# 通知 GameState（解锁技能）
+		var gs = Engine.get_main_loop().root.get_node_or_null("GameState")
+		if gs and fragment_id.begins_with("ch"):
+			var id_num := fragment_id.substr(2).to_int()
+			if id_num > 0:
+				gs.collect_shard(id_num)
 		print("[Fragment] collected: ", fragment_id)
 		# 简单效果：消失
 		var tween = create_tween()

@@ -32,10 +32,9 @@ func _save_progress() -> void:
 		"position": {"x": global_position.x, "y": global_position.y},
 		"scene_path": get_tree().current_scene.scene_file_path,
 	}
-	SaveSystem.save_game(0, data)
-	# 备用自动存档到 slot 3
+	# 修真: 只存 slot 3 (自动存档)，不覆盖 slot 0-2 (玩家手动存档)
 	SaveSystem.save_game(3, data)
-	print("[Checkpoint] saved at ", global_position)
+	print("[Checkpoint] autosaved to slot 3 at ", global_position)
 
 
 func _flash() -> void:

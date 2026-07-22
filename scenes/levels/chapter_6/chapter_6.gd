@@ -9,7 +9,7 @@ extends Node2D
 @export var next_scene: String = ""
 @export var chapter_name: String = "Chapter 6"
 @export var show_intro_dialog: bool = true
-@export var intro_dialog_path: String = "res://dialogs/chapter_1_intro.json"
+@export var intro_dialog_path: String = "res://dialogs/chapter_6_intro.json"
 
 var player: Node = null
 var boss_killed: bool = false

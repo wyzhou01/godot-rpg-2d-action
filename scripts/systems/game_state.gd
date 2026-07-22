@@ -16,9 +16,9 @@ var player_position: Vector2 = Vector2.ZERO
 var current_level_path: String = ""
 
 # 进度
-var collected_shards: Array[int] = []  # 已收集的碎片 ID（1-7）
-var defeated_bosses: Array[String] = []  # 已击败的 boss 名字
-var unlocked_abilities: Array[String] = []  # 已解锁技能
+var collected_shards: Array = []  # 已收集的碎片 ID（1-7）
+var defeated_bosses: Array = []  # 已击败的 boss 名字
+var unlocked_abilities: Array = []  # 已解锁技能
 var dialogue_history: Dictionary = {}  # 对话历史（影响后续对话）
 
 # 统计
