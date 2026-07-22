@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/test_save_load_real.gd" id="1_save_test"]
+
+[node name="SaveLoadRealTestRoot" type="Node"]
+script = ExtResource("1_save_test")

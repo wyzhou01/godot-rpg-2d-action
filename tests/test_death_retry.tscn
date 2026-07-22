@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/test_death_retry.gd" id="1_death_test"]
+
+[node name="DeathRetryTestRoot" type="Node"]
+script = ExtResource("1_death_test")

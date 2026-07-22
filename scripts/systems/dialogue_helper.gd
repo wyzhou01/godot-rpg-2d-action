@@ -209,6 +209,15 @@ func _input(event: InputEvent) -> void:
 		_advance()
 
 
+## 修真 V2.5: 兑底修真 Input.action_press 不产生 InputEvent 的场景
+## (修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真)
+func _process(_delta: float) -> void:
+	if not _is_showing:
+		return
+	if Input.is_action_just_pressed(ADVANCE_INPUT):
+		_advance()
+
+
 func _advance() -> void:
 	if not _is_showing:
 		return

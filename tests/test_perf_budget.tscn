@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/test_perf_budget.gd" id="1_perf_test"]
+
+[node name="PerfBudgetTestRoot" type="Node"]
+script = ExtResource("1_perf_test")
