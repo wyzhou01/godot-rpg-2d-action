@@ -123,6 +123,20 @@ V2.2 修复 7 个 chapter boss 信号链 bug。
 
 ---
 
+## 🧪 UI 真交互测试套件 (V2.6.B 新增)
+
+复用 V2.5 RobotPlayer 模式 + `Input.parse_input_event(InputEventAction)` 真 input 触发，验证 UI 菜单从加载 → 按按钮 → 场景切换 全链路：
+
+| 套件 | 测试数 | 覆盖 |
+|------|--------|------|
+| `pause_menu_ui` | 4 | 加载/默认隐藏/按 pause action/Resume 按钮/Settings 按钮实例化 |
+| `end_screen_ui` | 4 | 加载/默认隐藏/show_end_screen/stats_label 文本/Menu 按钮 → SceneManager |
+| `save_load_menu_ui` | 4 | 加载/默认隐藏/show_menu 显示 4 slot/空 slot → 新游戏/已存 slot → 加载 |
+
+总计 **21 套件 / 221 测试 / ~155s**。
+
+---
+
 ## 📜 文档
 
 - `DELIVERY_REPORT.md` — V2.5.2 最新交付报告
@@ -180,7 +194,7 @@ V2.5.2 cleanup + 本检测机制是防止该问题再次发生的防御措施。
 ## 🔗 Git
 
 ```
-14 commits:
+15 commits:
   65d2396 feat(test): V2.5 — RobotPlayer 真 input + 8 套件 (201 测试)
   141c1be feat(ui): EndScreen 加 Settings 按钮
   42eb731 feat(ui): Settings UI + Boss 视觉修复
