@@ -70,16 +70,16 @@ func wait_seconds(t: float) -> void:
 ## 持续按右键 (供 RUN 状态读到 move_right 强度 1.0)
 ## 会持续到调用 stop_move() 或 release_all()
 func start_move_right() -> void:
-	Input.action_press("move_right", 1.0)
+	_press_action("move_right", 1.0, false)
 
 
 func start_move_left() -> void:
-	Input.action_press("move_left", 1.0)
+	_press_action("move_left", 1.0, false)
 
 
 func stop_move() -> void:
-	Input.action_release("move_right")
-	Input.action_release("move_left")
+	_release_action("move_right", false)
+	_release_action("move_left", false)
 
 
 ## 攻击一次 (is_action_just_pressed 需要在干净帧上 press)
@@ -88,9 +88,9 @@ func stop_move() -> void:
 func attack(times: int = 1) -> void:
 	for i in range(times):
 		await wait_physics_frames(1)  # 干净帧
-		Input.action_press("attack", 1.0)
+		_press_action("attack", 1.0)
 		await wait_physics_frames(1)  # 让 just_pressed 触发
-		Input.action_release("attack")
+		_release_action("attack")
 		# 等动画完成 (attack_1 ≈ 0.25s)
 		await wait_physics_frames(15)
 
@@ -98,18 +98,18 @@ func attack(times: int = 1) -> void:
 ## 跳跃一次
 func jump() -> void:
 	await wait_physics_frames(1)
-	Input.action_press("jump", 1.0)
+	_press_action("jump", 1.0)
 	await wait_physics_frames(1)
-	Input.action_release("jump")
+	_release_action("jump")
 	await wait_physics_frames(20)
 
 
 ## 闪避
 func dash() -> void:
 	await wait_physics_frames(1)
-	Input.action_press("dash", 1.0)
+	_press_action("dash", 1.0)
 	await wait_physics_frames(1)
-	Input.action_release("dash")
+	_release_action("dash")
 	await wait_physics_frames(15)
 
 
@@ -198,6 +198,31 @@ func wait_for_health_change(timeout_sec: float = 5.0) -> float:
 ## 释放所有按下的输入 (测试结束前必调)
 func release_all() -> void:
 	for action in ["move_left", "move_right", "jump", "dash", "attack", "shield", "war_cry", "heal", "ultimate", "interact", "pause"]:
+		Input.action_release(action)
+
+
+# ===== Input helpers =====
+
+## 真 input: 送 InputEventAction 进 input 系统, 触发 is_action_just_pressed
+## headless 下 Input.action_press 不一定能触发 just_pressed 机制 (依赖 InputEvent 流程)
+func _press_action(action: String, strength: float = 1.0, trigger_just_pressed: bool = true) -> void:
+	if trigger_just_pressed:
+		var ev := InputEventAction.new()
+		ev.action = action
+		ev.pressed = true
+		ev.strength = strength
+		Input.parse_input_event(ev)
+	else:
+		Input.action_press(action, strength)
+
+
+func _release_action(action: String, trigger_just_pressed: bool = true) -> void:
+	if trigger_just_pressed:
+		var ev := InputEventAction.new()
+		ev.action = action
+		ev.pressed = false
+		Input.parse_input_event(ev)
+	else:
 		Input.action_release(action)
 
 

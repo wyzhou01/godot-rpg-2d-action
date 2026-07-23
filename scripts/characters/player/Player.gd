@@ -60,6 +60,7 @@ var can_combo: bool = false
 # 闪避
 var dodge_timer: float = 0.0
 var can_dodge: bool = true
+var _dodge_timer_started: bool = false
 
 
 func _ready() -> void:
@@ -200,6 +201,20 @@ func _state_dodge(delta: float) -> void:
 	hurt_box.invulnerable = true
 	velocity.x = facing * (player_stats.dash_speed if player_stats else 480.0)
 	play_anim("dodge")
+	# dodge 持续时长 timer 兑底退出 (不依赖 dodge 动画是否存在)
+	# 动画 fallback 到 idle 时 idle 是 loop, 不会触发 finished
+	if not _dodge_timer_started:
+		_dodge_timer_started = true
+		var dodge_duration: float = 0.5
+		if player_stats and "dash_duration" in player_stats:
+			dodge_duration = player_stats.dash_duration
+		var dodge_timer_node: SceneTreeTimer = get_tree().create_timer(dodge_duration)
+		dodge_timer_node.timeout.connect(func() -> void:
+			if state == PlayerState.DODGE:
+				hurt_box.invulnerable = false
+				_dodge_timer_started = false
+				_change_state(PlayerState.IDLE)
+		)
 
 
 func _state_hurt(_delta: float) -> void:
