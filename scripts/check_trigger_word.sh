@@ -114,25 +114,14 @@ if [[ "$MODE" == "staged" ]]; then
 
   # 2. 检查待提交 commit message
   #
-  # 重要逻辑：仅当 staged files 非空时才检查 COMMIT_EDITMSG
-  # 原因：`git commit --amend -m "..."` 时 .git/COMMIT_EDITMSG 仍是上一次
-  #       commit 的 message (不是用户新写的)，会误报。
-  # 如果 staged files 为空 说明是纯 amend message，不需要检查 COMMIT_EDITMSG。
-  COMMIT_MSG=""
-  if [[ -n "$STAGED_FILES" ]]; then
-    # 有 staged files：检查 COMMIT_EDITMSG (这是 git 即将提交的新 message)
-    if [[ -f "${GIT_DIR:-.git}/COMMIT_EDITMSG" ]]; then
-      COMMIT_MSG=$(cat "${GIT_DIR:-.git}/COMMIT_EDITMSG")
-    fi
-  else
-    # 无 staged files: 跳过 COMMIT_EDITMSG (可能是 amend 或其他操作)
-    echo "ℹ️  无 staged files，跳过 commit message 检查 (避免误报 amend 残留)"
-  fi
-  for word in "${TRIGGER_WORDS[@]}"; do
-    if [[ -n "$COMMIT_MSG" ]]; then
-      check_word_in_string "$word" "$COMMIT_MSG" "commit message"
-    fi
-  done
+  # 为什么不检查 commit message？
+  # - `git commit -m "..."` 不通过 .git/COMMIT_EDITMSG，hook 拿不到 -m 参数
+  # - `git commit` (编辑器模式) 通过 COMMIT_EDITMSG，但这时 hook 跑完了
+  # - commit message 是历史固化内容，不会重复让 agent runtime 卡死
+  #   (除非 agent 读 git log 并输出，但那是工具问题，不是 commit 问题)
+  # - 修真危机本质是 agent 实时输出含 trigger word → 必须检查的是 working tree
+  #
+  echo "ℹ️  不检查 commit message (历史固化，不触发卡死)"
 
 elif [[ "$MODE" == "diff" ]]; then
   # ====== CI 模式：检查 base..HEAD 的文件内容 diff (不查历史 commit messages) ======
