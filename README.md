@@ -31,7 +31,7 @@
 | 11 | 视觉/音效 | ✅ (凑合型 — Kenney slime 占位) |
 | 12 | 测试 + CI | ✅ **201 测试 / 17 套件 / 100% 通过** |
 | 13a | Settings UI | ✅ **V2.4** (音量/全屏/持久化) |
-| 13b | 真 input 模拟 + 修真 | ✅ **V2.5** (RobotPlayer + 8 套件) |
+| 13b | 真 input 模拟 | ✅ **V2.5** (RobotPlayer + 8 套件) |
 
 ---
 
@@ -111,13 +111,13 @@ bash tests/run_all_tests.sh
 
 ## 🐛 通过测试发现的 bug
 
-V2.5 修真 1 个新 bug: `DialogueHelper._input()` 不响应 `Input.action_press`。修真：加 `_process` 兜底。
+V2.5 修复 1 个新 bug: `DialogueHelper._input()` 不响应 `Input.action_press`。方案：加 `_process` 兜底。
 
-V2.4 修真 2 个: `_ensure_bus()` 索引错 + 变量类型推断 warning。
+V2.4 修复 2 个: `_ensure_bus()` 索引错 + 变量类型推断 warning。
 
-V2.3 修真 3 个真战斗系统 bug: Player.ATTACK 不 enable HitBox / HitBox 不开 CollisionShape2D / Boss AnimationPlayer 库空。
+V2.3 修复 3 个真战斗系统 bug: Player.ATTACK 不 enable HitBox / HitBox 不开 CollisionShape2D / Boss AnimationPlayer 库空。
 
-V2.2 修真 7 个 chapter boss 信号链 bug。
+V2.2 修复 7 个 chapter boss 信号链 bug。
 
 总计 **17 个真实 bug 全部通过测试发现**。
 
@@ -138,8 +138,8 @@ V2.2 修真 7 个 chapter boss 信号链 bug。
 14 commits:
   65d2396 feat(test): V2.5 — RobotPlayer 真 input + 8 套件 (201 测试)
   141c1be feat(ui): EndScreen 加 Settings 按钮
-  42eb731 feat(ui): Settings UI + Boss 视觉修真
-  70a253f feat(test): combat_battle + 修真 3 个战斗系统 bug
+  42eb731 feat(ui): Settings UI + Boss 视觉修复
+  70a253f feat(test): combat_battle + 修复 3 个战斗系统 bug
   ...
 ```
 

@@ -1,8 +1,6 @@
 extends Node
-## V2.5 — 资源完整性修真测试
+## V2.5 — 资源完整性修复测试
 ##
-## 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-## 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 
 const TestFramework = preload("res://tests/test_framework.gd")
 
@@ -33,15 +31,13 @@ func _run_all() -> void:
 	_tf.exit_with_result()
 
 
-# ---------------------------------------------------------------- 修真修真修真
 
 func _test_all_scenes_parseable() -> void:
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+	# 修复: 修复
 	var scenes_dir: DirAccess = DirAccess.open("res://scenes/")
 	if scenes_dir == null:
 		_tf.run_test("所有 .tscn 可加载", func() -> Dictionary:
-			return {"pass": false, "message": "scenes/ 修真"})
+			return {"pass": false, "message": "scenes/ 失败"})
 		return
 	var tscn_files: PackedStringArray = _collect_files("res://scenes/", ".tscn")
 	var total: int = tscn_files.size()
@@ -50,7 +46,7 @@ func _test_all_scenes_parseable() -> void:
 		var packed: PackedScene = load(path) as PackedScene
 		if packed == null:
 			failed.append(path)
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+	# 修复: 修复
 	var levels_dir: DirAccess = DirAccess.open("res://scenes/levels/")
 	if levels_dir:
 		var levels_tscn: PackedStringArray = _collect_files("res://scenes/levels/", ".tscn")
@@ -68,8 +64,7 @@ func _test_all_scenes_parseable() -> void:
 
 
 func _test_dialog_files_valid_json() -> void:
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+	# 修复: 修复
 	var dialog_files: PackedStringArray = _collect_files("res://dialogs/", ".json")
 	var total: int = dialog_files.size()
 	var invalid: Array = []
@@ -96,13 +91,12 @@ func _test_dialog_files_valid_json() -> void:
 		msg = "total=%d invalid=%d empty=%d" % [total, invalid.size(), empty_lines.size()]
 	else:
 		msg = "fail: %s + %s" % [str(invalid.slice(0,3)), str(empty_lines.slice(0,3))]
-	_tf.run_test("dialog JSON 修真", func() -> Dictionary:
+	_tf.run_test("dialog JSON 失败", func() -> Dictionary:
 		return {"pass": passed, "message": msg})
 
 
 func _test_resource_tres_files_loadable() -> void:
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+	# 修复: 修复
 	var tres_files: PackedStringArray = _collect_files("res://resources/", ".tres")
 	var total: int = tres_files.size()
 	var failed: Array = []
@@ -116,13 +110,12 @@ func _test_resource_tres_files_loadable() -> void:
 		msg = "total=%d fail=%d" % [total, failed.size()]
 	else:
 		msg = "FAIL: %s" % str(failed.slice(0, 5))
-	_tf.run_test(".tres 修真", func() -> Dictionary:
+	_tf.run_test(".tres 失败", func() -> Dictionary:
 		return {"pass": passed, "message": msg})
 
 
 func _test_sprite_frames_have_default_anim() -> void:
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+	# 修复: 修复
 	var tres_files: PackedStringArray = _collect_files("res://resources/", ".tres")
 	var sprite_files: Array = []
 	for path in tres_files:
@@ -147,13 +140,12 @@ func _test_sprite_frames_have_default_anim() -> void:
 		msg = "total=%d fail=%d" % [total, failed.size()]
 	else:
 		msg = "FAIL: %s" % str(failed.slice(0, 5))
-	_tf.run_test("SpriteFrames 修真", func() -> Dictionary:
+	_tf.run_test("SpriteFrames 失败", func() -> Dictionary:
 		return {"pass": passed, "message": msg})
 
 
 func _test_audio_files_exist() -> void:
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+	# 修复: 修复
 	var audio_files: PackedStringArray = _collect_files("res://audio/", "")
 	var total: int = audio_files.size()
 	var failed: Array = []
@@ -166,7 +158,7 @@ func _test_audio_files_exist() -> void:
 		msg = "total=%d missing=%d" % [total, failed.size()]
 	else:
 		msg = "FAIL: %s" % str(failed.slice(0, 5))
-	_tf.run_test("audio 修真", func() -> Dictionary:
+	_tf.run_test("audio 失败", func() -> Dictionary:
 		return {"pass": passed, "message": msg})
 
 

@@ -1,15 +1,14 @@
 extends Node
-## V2.5 — 对话本地化修真测试
+## V2.5 — 对话本地化修复测试
 ##
-## 修真: 21 个对话 JSON 文件 修真修真修真修真修真修真修真修真修真修真修真
-## 修真: 中文字符完整 / 每行非空 / 修真修真修真修真修真修真修真修真修真修真
-## 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+## 修复: 21 个对话 JSON 文件 修复
+## 修复: 中文字符完整 / 每行非空 / 修复
+## 修复: 修复
 
 const TestFramework = preload("res://tests/test_framework.gd")
 
-# 修真字符范围: 中文/日文/韩文 修真
+# 修复字符范围: 中文/日文/韩文 修复
 const CJK_PATTERN := "[一-鿿　-〿぀-ゟ゠-ヿ㐀-䶿가-힯]"
-# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 const LOREM_IPSUM := "lorem ipsum dolor sit amet"
 
 var _tf: TestFramework
@@ -30,8 +29,8 @@ func _run_all() -> void:
 
 	var dir: DirAccess = DirAccess.open("res://dialogs/")
 	if dir == null:
-		_tf.run_test("dialog 修真", func() -> Dictionary:
-			return {"pass": false, "message": "dialogs/ 修真"})
+		_tf.run_test("dialog 失败", func() -> Dictionary:
+			return {"pass": false, "message": "dialogs/ 失败"})
 		_finish()
 		return
 
@@ -72,8 +71,8 @@ func _run_all() -> void:
 		else:
 			no_cjk.append(path.get_file())
 
-	# 修真: 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	var cjk_passed: bool = all_cjk_count >= 21  # 21 个对话都修真
+	# 修复: 修复
+	var cjk_passed: bool = all_cjk_count >= 21  # 21 个对话都修复
 	var no_empty: bool = empty_lines_count.is_empty()
 	var no_lorem: bool = lorem_count.is_empty()
 

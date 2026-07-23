@@ -1,9 +1,6 @@
 extends Node
 ## V2.5.1 — 真玩家跨 7 章全程跑测试
 ##
-## 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-## 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-## 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 
 const TestFramework = preload("res://tests/test_framework.gd")
 const RobotPlayer = preload("res://scripts/testing/RobotPlayer.gd")
@@ -31,22 +28,19 @@ func _start_tests() -> void:
 func _run_all() -> void:
 	_tf.start_suite("playthrough_full")
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真
 	PlayerData.reset_for_new_game()
 	_gs = Engine.get_main_loop().root.get_node_or_null("GameState")
 	if _gs:
 		_gs.collected_shards = []
 		_gs.defeated_bosses = []
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	for ch in range(1, 8):
 		_robot.release_all()
 		var boss_name: String = BOSS_NAMES[ch - 1]
 		var result: Dictionary = await _run_chapter(ch, boss_name)
-		_tf.run_test("Ch%d %s 修真修真修真" % [ch, boss_name], func() -> Dictionary: return result)
+		_tf.run_test("Ch%d %s 失败" % [ch, boss_name], func() -> Dictionary: return result)
 		await _cleanup_scene()
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	await _test_game_complete_after_all_bosses()
 
 	_tf.end_suite()
@@ -55,38 +49,30 @@ func _run_all() -> void:
 
 
 func _run_chapter(ch: int, boss_name: String) -> Dictionary:
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	var intro_path: String = "res://scenes/levels/chapter_%d/chapter_%d_intro.tscn" % [ch, ch]
 	var boss_path: String = "res://scenes/levels/chapter_%d/chapter_%d_boss.tscn" % [ch, ch]
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	var scene = load(intro_path)
 	if scene == null:
-		return {"pass": false, "message": "%s 修真修真" % intro_path}
+		return {"pass": false, "message": "%s 失败" % intro_path}
 	_current_scene = scene.instantiate()
 	get_tree().root.add_child.call_deferred(_current_scene)
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	for i in range(20):
 		await _robot.wait_physics_frames(1)
 		await _press_ui_accept_safe()
 		await get_tree().process_frame
-		# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 		var dh = Engine.get_main_loop().root.get_node_or_null("DialogueHelper")
 		if dh and not dh.is_showing():
 			break
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	await _cleanup_scene()
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	var boss_scene = load(boss_path)
 	if boss_scene == null:
-		return {"pass": false, "message": "%s 修真修真" % boss_path}
+		return {"pass": false, "message": "%s 失败" % boss_path}
 	_current_scene = boss_scene.instantiate()
 	get_tree().root.add_child.call_deferred(_current_scene)
 	await get_tree().process_frame
@@ -95,17 +81,15 @@ func _run_chapter(ch: int, boss_name: String) -> Dictionary:
 	var player: Node2D = _current_scene.find_child("Player", true, false)
 	var boss: Node2D = _current_scene.find_child(boss_name, true, false)
 	if player == null:
-		return {"pass": false, "message": "Player 修真修真"}
+		return {"pass": false, "message": "Player 失败"}
 	if boss == null:
-		return {"pass": false, "message": "%s 修真修真" % boss_name}
+		return {"pass": false, "message": "%s 失败" % boss_name}
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	boss.set_physics_process(false)
 	var detection = boss.get_node_or_null("PlayerDetectionZone")
 	if detection:
 		detection.set_physics_process(false)
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	var hurt_box = player.get_node_or_null("HurtBox")
 	if hurt_box:
 		hurt_box.invulnerable = true
@@ -118,10 +102,9 @@ func _run_chapter(ch: int, boss_name: String) -> Dictionary:
 	player.hitbox_pivot.scale.x = 1
 	await get_tree().physics_frame
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	var boss_stats = boss.get_node_or_null("Stats")
 	if boss_stats == null:
-		return {"pass": false, "message": "Boss 修真 Stats"}
+		return {"pass": false, "message": "Boss 失败 Stats"}
 	var max_iter := 25
 	var iter := 0
 	var last_hp: int = boss_stats.health
@@ -143,19 +126,17 @@ func _run_chapter(ch: int, boss_name: String) -> Dictionary:
 		iter += 1
 
 	if boss_stats.health > 0:
-		return {"pass": false, "message": "Ch%d 修真修真: HP=%d hits=%d" % [ch, boss_stats.health, hits]}
+		return {"pass": false, "message": "Ch%d 失败: HP=%d hits=%d" % [ch, boss_stats.health, hits]}
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	if _gs and not boss_name in _gs.defeated_bosses:
-		return {"pass": false, "message": "GameState.defeated_bosses 修真修真 %s" % boss_name}
+		return {"pass": false, "message": "GameState.defeated_bosses 失败 %s" % boss_name}
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	if not _current_scene.boss_killed:
-		return {"pass": false, "message": "boss_killed 修真修真 false"}
+		return {"pass": false, "message": "boss_killed 失败 false"}
 
 	return {
 		"pass": true,
-		"message": "Ch%d %s 修真修真修真修真修真修真修真修真修真修真 (hits=%d)" % [ch, boss_name, hits]
+		"message": "Ch%d %s 失败 (hits=%d)" % [ch, boss_name, hits]
 	}
 
 
@@ -167,31 +148,26 @@ func _press_ui_accept_safe() -> void:
 	await get_tree().process_frame
 
 
-# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 func _test_game_complete_after_all_bosses() -> void:
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	_gs = Engine.get_main_loop().root.get_node_or_null("GameState")
 	if _gs == null:
-		_tf.run_test("修真修真修真修真修真修真修真修真修真修真", func() -> Dictionary:
-			return {"pass": false, "message": "GameState 修真修真"})
+		_tf.run_test("失败", func() -> Dictionary:
+			return {"pass": false, "message": "GameState 失败"})
 		return
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	if _gs.defeated_bosses.size() < 7:
-		_tf.run_test("修真修真修真修真修真修真修真修真修真修真", func() -> Dictionary:
-			return {"pass": false, "message": "修真修真修真: defeated=%d/7" % _gs.defeated_bosses.size()})
+		_tf.run_test("失败", func() -> Dictionary:
+			return {"pass": false, "message": "失败: defeated=%d/7" % _gs.defeated_bosses.size()})
 		return
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	for ch in range(1, 8):
 		_gs.collect_shard(ch)
 	var dh = Engine.get_main_loop().root.get_node_or_null("DialogueHelper")
 	if dh == null:
-		_tf.run_test("修真修真修真修真修真修真修真修真修真修真", func() -> Dictionary:
-			return {"pass": false, "message": "DialogueHelper 修真"})
+		_tf.run_test("失败", func() -> Dictionary:
+			return {"pass": false, "message": "DialogueHelper 失败"})
 		return
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	var state: Dictionary = {"complete_started": false}
 	var on_started := func(_t: String) -> void:
 		state["complete_started"] = true
@@ -204,8 +180,8 @@ func _test_game_complete_after_all_bosses() -> void:
 	dh.dialogue_started.disconnect(on_started)
 
 	var passed: bool = state["complete_started"] or dh.is_showing()
-	_tf.run_test("修真修真修真修真修真修真修真修真修真修真", func() -> Dictionary:
-		return {"pass": passed, "message": "修真修真: started=%s, showing=%s, shards=%d" % [
+	_tf.run_test("失败", func() -> Dictionary:
+		return {"pass": passed, "message": "失败: started=%s, showing=%s, shards=%d" % [
 			str(state["complete_started"]), str(dh.is_showing()), _gs.collected_shards.size()
 		]})
 

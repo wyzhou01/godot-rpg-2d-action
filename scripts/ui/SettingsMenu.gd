@@ -6,7 +6,7 @@ extends CanvasLayer
 ##
 ## 用法: 实例化本场景 (add_child) → 用户操作 → emit closed 信号 → 调用方负责清理
 ##
-## 修真 V2.4:
+## 修复 V2.4:
 ## - Master bus 是 AudioServer 默认 bus idx 0, 永远存在
 ## - Music / SFX bus 运行时检查, 不存在则 add_bus
 ## - Maaacks 插件会用 "Music" bus 放背景乐

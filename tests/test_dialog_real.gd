@@ -1,7 +1,7 @@
 extends Node
 ## V2.5 — 真 input 对话测试 (RobotPlayer 驱动)
 ##
-## 修真: GDScript lambda 是 by-value 捕获, 用 Dictionary 当容器修真修真修真修真修真
+## 修复: GDScript lambda 是 by-value 捕获, 用 Dictionary 当容器修复
 
 const TestFramework = preload("res://tests/test_framework.gd")
 const RobotPlayer = preload("res://scripts/testing/RobotPlayer.gd")
@@ -50,7 +50,7 @@ func _run_all() -> void:
 	_tf.exit_with_result()
 
 
-# ---------------------------------------------------------------- 真修真修真修真
+# ---------------------------------------------------------------- 真修复
 
 func _test_dialog_playthrough(path: String) -> Dictionary:
 	var dh: Node = get_node_or_null("/root/DialogueHelper")
@@ -72,7 +72,7 @@ func _test_dialog_playthrough(path: String) -> Dictionary:
 	if lines.is_empty():
 		return {"pass": false, "message": "%s lines 为空" % path}
 
-	# 修真: GDScript lambda 是 by-value, 用 Dictionary 当修真修真修真修真修真
+	# 修复: GDScript lambda 是 by-value, 用 Dictionary 当修复
 	var state: Dictionary = {
 		"started_seen": false,
 		"ended_seen": false,
@@ -89,7 +89,7 @@ func _test_dialog_playthrough(path: String) -> Dictionary:
 		state["ended_seen"] = true
 		state["ended_timeline"] = t
 
-	# 修真: 先 connect 再 show (修真修真修真修真修真修真修真修真修真)
+	# 修复: 先 connect 再 show (修复)
 	dh.dialogue_started.connect(on_started)
 	dh.dialogue_line_shown.connect(on_shown)
 	dh.dialogue_ended.connect(on_ended)
@@ -110,7 +110,6 @@ func _test_dialog_playthrough(path: String) -> Dictionary:
 		dh.dialogue_ended.disconnect(on_ended)
 		return {"pass": false, "message": "show() 后 is_showing() 仍为 false"}
 
-	# 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
 	for i in range(lines.size()):
 		await _press_ui_accept()
 		await get_tree().process_frame
@@ -125,7 +124,6 @@ func _test_dialog_playthrough(path: String) -> Dictionary:
 	dh.dialogue_line_shown.disconnect(on_shown)
 	dh.dialogue_ended.disconnect(on_ended)
 
-	# 修真修真修真修真修真修真修真修真
 	if not state["ended_seen"]:
 		return {"pass": false, "message": "dialogue_ended 信号未触发 (显示 %d/%d 行)" % [int(state["lines_shown"]), lines.size()]}
 	if int(state["lines_shown"]) != lines.size():
@@ -178,12 +176,12 @@ func _test_dialog_signals() -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	# 真修真每行
+	# 真修复每行
 	for i in range(5):
 		await _press_ui_accept()
 		await get_tree().process_frame
 
-	# 修真剩下所有行
+	# 修复剩下所有行
 	var safety := 50
 	while dh.is_showing() and safety > 0:
 		await _press_ui_accept()
@@ -219,15 +217,15 @@ func _test_dialog_force_cleanup() -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if not dh.is_showing():
-		_tf.run_test("Dialog skip() 修真", func() -> Dictionary:
+		_tf.run_test("Dialog skip() 失败", func() -> Dictionary:
 			return {"pass": false, "message": "show() 失败"})
 		return {"pass": false, "message": "show failed"}
 	dh.skip()
 	await get_tree().process_frame
 	if dh.is_showing():
-		_tf.run_test("Dialog skip() 修真", func() -> Dictionary:
+		_tf.run_test("Dialog skip() 失败", func() -> Dictionary:
 			return {"pass": false, "message": "skip() 后仍 showing"})
 		return {"pass": false, "message": "skip failed"}
-	_tf.run_test("Dialog skip() 修真", func() -> Dictionary:
+	_tf.run_test("Dialog skip() 失败", func() -> Dictionary:
 		return {"pass": true, "message": "skip ok"})
 	return {"pass": true, "message": "ok"}

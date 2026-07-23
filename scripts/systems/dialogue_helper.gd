@@ -209,8 +209,8 @@ func _input(event: InputEvent) -> void:
 		_advance()
 
 
-## 修真 V2.5: 兑底修真 Input.action_press 不产生 InputEvent 的场景
-## (修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真)
+## 修复 V2.5: 兑底修复 Input.action_press 不产生 InputEvent 的场景
+## (修复)
 func _process(_delta: float) -> void:
 	if not _is_showing:
 		return

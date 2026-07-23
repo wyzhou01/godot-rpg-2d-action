@@ -15,7 +15,7 @@
 | **对话链路** | **21/21 对话 JSON 用 ui_accept 真推进完成** |
 | **资源完整性** | **30 场景 + 16 资源 + 12 音频 全部加载** |
 | **中文本地化** | **21/21 对话文件含中文，无空行无 Lorem 占位** |
-| **死亡链路** | **Player HP=0 → state=DEATH + physics off 修真** |
+| **死亡链路** | **Player HP=0 → state=DEATH + physics off + SceneManager 重载** |
 | **性能预算** | **单帧 < 33ms / 7 章加载 < 3s / 内存稳定** |
 | **.gd 脚本** | 36 个 |
 | **.tscn 场景** | 31 个 |
@@ -24,41 +24,45 @@
 
 ## 🆕 V2.5.1 更新 (2026-07-22)
 
-修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真:
+V2.5.1 是 gameplay 收尾 + 真玩家跨章测试。包含 4 个真 bug 修复 + 1 个新增 8 测试套件。
 
-1. **GameState Array 类型修真** (scripts/systems/game_state.gd):
-   - 修真: `Array[int]` / `Array[String]` → `Array`
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+**4 个真 bug 修复** (commit `d914bc5`):
 
-2. **Ch4-7 intro_dialog_path 修真修真修真修真** (4 个 chapter_X.gd):
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+1. **GameState Array 类型** (scripts/systems/game_state.gd):
+   - 把 `collected_shards: Array[int]` / `defeated_bosses: Array[String]` / `unlocked_abilities: Array[String]` 改为无类型参数 `Array`
+   - 原因: Godot 4.6 严格 JSON load 不接受带类型参数的 Array 序列化, 启动时 `_apply_save` 抛错
 
-3. **Fragment.gd 修真修真修真修真修真** (scripts/objects/Fragment.gd):
-   - 修真: 修真 GameState.collect_shard() + 修真 has_fragment() 修真修真修真
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+2. **Chapter 4-7 intro_dialog_path 错位** (4 个 chapter_X.gd):
+   - Ch4-7 的 `intro_dialog_path` 之前全指 `chapter_1_intro.json`，玩家进 Ch4-7 听到的是 Ch1 的对话
+   - 改为各自 `chapter_X_intro.json`
 
-4. **Checkpoint.gd 修真修真修真修真修真** (scripts/core/Checkpoint.gd):
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - 修真: 修真修真修真修真修真 slot 3, 修真修真修真 slot 0-2 修真修真修真
+3. **Fragment.gd 重复收集 + 技能未解锁** (scripts/objects/Fragment.gd):
+   - 加 `PlayerData.has_fragment(fragment_id)` 防重复收集（之前可重复触发音效）
+   - 加 GameState `collect_shard()` 调用，让收集碎片真正解锁技能（之前 GameState.collected_shards 永远空）
 
-5. **playthrough_full 修真** (tests/test_playthrough_full.gd/.tscn):
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+4. **Checkpoint.gd 覆盖玩家手动存档** (scripts/core/Checkpoint.gd):
+   - 之前每次 checkpoint 触发都覆盖 slot 0，导致玩家手动存档丢失
+   - 改为只存 slot 3（自动存档），不触碰 slot 0-2（玩家手动存档）
 
-**修真统计**:
+**新增 playthrough_full 测试套件** (commit `1f368da`):
+
+- `tests/test_playthrough_full.gd/.tscn` (8 测试):
+  - 1 个 _start 烟测 (RobotPlayer 加载 + 初始状态)
+  - 7 个跨章测试 (Ch1-Ch7 顺序跑：开新局 → RobotPlayer 真按 attack → 通关 → 收集 shard → 击败 boss → 进入下一章)
+  - 1 个 _all_bosses 终局测试 (7 章全打完触发 GameState.game_complete)
+- 用 RobotPlayer 真按 `ui_accept` 推进 dialog、真按 `attack` 打 boss
+- 修复 V2.5 的 4 个 gameplay bug 后才能 100% 通过（Ch4-7 dialog 错位会让 dialog_real 测试过不了本章节）
+
+**统计**:
 | 指标 | V2.5 | V2.5.1 |
-|------|------|-------|
+|------|------|--------|
 | 套件 | 17 | **18** (+1) |
 | 测试 | 201 | **209** (+8) |
-| 耗时 | 108s | 148s |
+| 耗时 | 108s | **148s** |
 
 ## 🆕 V2.5 更新 (2026-07-22)
 
-相比 V2.4 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真 — **全修真修真修真修真修真修真修真修真修真修真修真修真**:
+相比 V2.4，V2.5 是测试基建跃迁 — **从单元测试 → 真 input 战斗 + 全栈覆盖**:
 
 1. **新增 `RobotPlayer`** (`scripts/testing/RobotPlayer.gd`)
    - 用 `Input.action_press/release` 真按移动/攻击/跳跃/闪避
@@ -67,42 +71,33 @@
    - `release_all()` 测试间清理残留输入
 
 2. **`test_real_input_combat`** (7 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
    - Player._read_input 真读到 RobotPlayer 的 action_press
    - HitBox enable → Boss 真扣血 → boss_killed=true
-   - 修真 V2.3 的 teleport + bypass 路径
+   - 修复 V2.3 的 teleport + bypass 路径
 
-3. **`test_dialog_real`** (9 测试) + **修真 1 真 bug**
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+3. **`test_dialog_real`** (9 测试) + **修复 1 真 bug**
    - `DialogueHelper._input()` 不响应 `Input.action_press`（已知 Godot issue #63969）
-   - **修真**: 加 `_process` 检查 `Input.is_action_just_pressed("ui_accept")` 兜底
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
+   - **修复**: 加 `_process` 检查 `Input.is_action_just_pressed("ui_accept")` 兜底
 
 4. **`test_save_load_real`** (6 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
    - round-trip 完整性 + slot overwrite + invalid slot reject + delete + get_all_saves + 复合数据
 
 5. **`test_settings_runtime`** (4 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
-   - AudioServer bus 修真修真修真修真修真修真修真修真修真修真修真修真
+   - AudioServer bus 音量 setter 真正反映到运行中
 
 6. **`test_asset_integrity`** (5 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
    - 所有 .tscn 可加载 / 对话 JSON 合法 / .tres 可加载 / SpriteFrames 有 anim / 音频存在
 
 7. **`test_dialog_localization`** (3 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
    - 21 对话全含中文 / 无空行 / 无 Lorem Ipsum 占位
 
 8. **`test_death_retry`** (3 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
    - PlayerData.deaths +1 / 死亡信号链 / 连死 3 次计数
 
 9. **`test_perf_budget`** (4 测试)
-   - 修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真
    - 7 章加载 < 3s / cleanup < 500ms / 单帧 < 33ms / 内存稳定
 
-**修真统计**:
+**迭代统计**:
 
 | 指标 | V2.4 | V2.5 | V2.5.1 |
 |------|------|------|--------|
@@ -111,15 +106,15 @@
 | 耗时 | 70s | 108s | 148s |
 | .gd 脚本 | 35 | 36 | 36 |
 
-**修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真修真**:
+**遇到的工程坑 (V2.5 修复期间一并处理)**:
 
-- **`PlayerState.DEATH = 7`**（修真 8 — 之前 off-by-one）
+- **`PlayerState.DEATH = 7`**（V2.4 漏写 → V2.5 修复：off-by-one 让死亡状态错位）
 - **`pass` 是 GDScript 关键字** → 变量名改 `passed`
-- **`ConfigFile.get_value()` 返回 Variant** → 修真 `var v: float = ...` 类型注解
-- **GDScript lambda 是 by-value 捕获** → 用 Dictionary 当修真修真容器
-- **`SettingsMenu.new()` 修真修真修真** → 用 `scene.instantiate()`
-- **内联 ternary 含 `]`** 修真解析歧义 → 拆成 if/else
-- **内联 lambda + await** → `run_test()` 修真修真修真修真修真修真修真
+- **`ConfigFile.get_value()` 返回 Variant** → 取消 `var v: float = ...` 强类型注解
+- **GDScript lambda 是 by-value 捕获** → 用 Dictionary 当捕获容器
+- **`SettingsMenu.new()` 报错** (Cannot instance CanvasLayer) → 用 `scene.instantiate()`
+- **内联 ternary 含 `]`** 触发解析歧义 → 拆成 if/else
+- **内联 lambda + await** 在 GDScript 里要拆开 → `run_test()` 改成声明式 wrapper
 
 ## 🆕 V2.4 更新 (2026-07-22)
 
@@ -133,23 +128,23 @@
 2. **`scripts/ui/SettingsMenu.gd`** — CanvasLayer + 3 音量 slider + 全屏 toggle + 返回按钮
 3. **`scenes/ui/settings_menu.tscn`** — 完整 UI 树
 4. **PauseMenu 加 Settings 按钮** (esc → Settings → 调音量 → Back)
-5. **修真 `_ensure_bus()` 逻辑 bug**: 新 bus 索引应该是 `AudioServer.bus_count - 1`，不是 `bus_count`
-6. **修真变量类型推断 warning**: Godot 4.6 严格模式 4 处类型注解修真
+5. **修复 `_ensure_bus()` 逻辑 bug**: 新 bus 索引应该是 `AudioServer.bus_count - 1`，不是 `bus_count`
+6. **修复变量类型推断 warning**: Godot 4.6 严格模式 4 处类型注解
 
 ## 🆕 V2.3 更新 (2026-07-22)
 
-相比 V2.2 增加/修真三件事:
+相比 V2.2 增加/修复三件事:
 
 1. **新增 `test_combat_battle` 套件** — Driver 模式驱动真战斗通关（148 → 155 测试）
-2. **修真 3 个真战斗系统 bug**（combat_battle 测试时发现）:
+2. **修复 3 个真战斗系统 bug**（combat_battle 测试时发现）:
    - **Bug C**: `Player._change_state(ATTACK)` 依赖 AnimationPlayer track call，但玩家用 AnimatedSprite2D → HitBox 永不 enable
    - **Bug D**: `HitBox.enable()` 只开 `monitoring=true`，但 CollisionShape2D.disabled 默认 true → area_entered 永不触发
    - **Bug E**: BaseBoss 直接调 `animation_player.play("hurt"/"death")` → 7 个 Boss AnimationPlayer 库都是空 → ERROR 满屏
-3. **日志干净** — 修真后 combat_battle 跑 0 ERROR
+3. **日志干净** — combat_battle 跑后 0 ERROR（修复前 AnimationPlayer ERROR 满屏）
 
 ## 🆕 V2.2 更新 (2026-07-21)
 
-1. **修真 7 个 chapter boss 信号链真 bug**:
+1. **修复 7 个 chapter boss 信号链真 bug**:
    - **Bug A**: `chapter_X._on_boss_defeated` 漏调 `GameState.defeat_boss(boss_name)` → 跨章进度断裂
    - **Bug B**: 对话路径 copy-paste 错误（Ch1-6 全部显示 `chapter_1_boss_defeat.json`）
 2. **新增 `test_playthrough` 套件**（144 → 148 测试）
@@ -157,8 +152,8 @@
 
 ## 🆕 V2.1 (回顾)
 
-- 修真 EndScreen @onready 路径 bug（Ch7 加载时报 `Node not found: Stats/MenuButton`）
-- 修真 `run_all_tests.sh` macOS bash 3.2 超时失效 (`declare -A` 关联数组)
+- 修复 EndScreen @onready 路径 bug（Ch7 加载时报 `Node not found: Stats/MenuButton`）
+- 修复 `run_all_tests.sh` macOS bash 3.2 超时失效 (`declare -A` 关联数组)
 - 新增 `test_boss_names` 套件
 
 ## 🎮 怎么玩
@@ -271,11 +266,11 @@ bash tests/run_all_tests.sh
 | 16 | DialogueHelper._input 不响应 Input.action_press | 中等 | 加 _process 兜底 |
 | 17 | SettingsMenu._ensure_bus() 索引错 | 中等 | 用 `bus_count - 1` |
 | 18 | GameState `Array[int]` 类型与 JSON load 不兼容 | 中等 | 去强类型注解 |
-| 19 | Ch4-7 intro_dialog_path 都指向 chapter_1_intro.json | 严重 | 修真修真修真修真修真修真修真 |
+| 19 | Ch4-7 intro_dialog_path 都指向 chapter_1_intro.json | 严重 | 改为各章节对应 JSON |
 | 20 | Fragment.gd 不通知 GameState + 可重复拾取 | 中等 | 加 GameState.collect_shard + dedup |
 | 21 | Checkpoint.gd 覆盖手动存档 (slot 0) | 严重 | 只存 slot 3 (自动存档) |
 
-**21 个真实 bug 全部通过测试发现**（V2.5.1 新增 4 个修真 bug）。
+**21 个真实 bug 全部通过测试发现**（V2.5.1 新增 4 个修复 bug）。
 
 ## 📦 项目结构
 
@@ -346,12 +341,12 @@ tests/
 
 ```
 15 commits:
-  65d2396 feat(test): V2.5 — RobotPlayer 真 input + 8 套件 修真 (201 测试)
-  d914bc5 fix(gameplay): V2.5.1 — 修真 4 真 bug (GameState/IntroPath/Fragment/Checkpoint)
+  65d2396 feat(test): V2.5 — RobotPlayer 真 input + 8 套件 (201 测试)
+  d914bc5 fix(gameplay): V2.5.1 — 修复 4 真 bug (GameState/IntroPath/Fragment/Checkpoint)
   141c1be feat(ui): EndScreen 加 Settings 按钮 (V2.4 配套)
-  42eb731 feat(ui): Settings UI + Boss 视觉修真 (V2.4)
-  70a253f feat(test): 真战斗通关套件 combat_battle + 修真 3 个战斗系统 bug (V2.3)
-  3705393 feat(test): playthrough 套件 + 修真 2 个 chapter_X.gd 隐藏 bug (V2.2)
+  42eb731 feat(ui): Settings UI + Boss 视觉修复 (V2.4)
+  70a253f feat(test): 真战斗通关套件 combat_battle + 修复 3 个战斗系统 bug (V2.3)
+  3705393 feat(test): playthrough 套件 + 修复 2 个 chapter_X.gd 隐藏 bug (V2.2)
   e4d0b94 chore: 同步套件数 6→7, CI job 名 134→144
   f136d5e docs: DELIVERY_REPORT V2.0 → V2.1
   73eac61 fix(test): EndScreen 路径 bug + bash 字典 + boss_names
@@ -371,4 +366,4 @@ tests/
 
 _制作: 阿迈（设计）+ 嘟嘟（架构/代码/资源/测试）_
 _日期: 2026-07-22_
-_版本: V2.5.1 (修真 4 真修真 bug + 跨 7 章真玩家全程)_
+_版本: V2.5.1 (修复 4 真修复 bug + 跨 7 章真玩家全程)_

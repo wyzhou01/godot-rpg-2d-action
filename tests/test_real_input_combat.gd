@@ -1,11 +1,11 @@
 extends Node
 ## V2.5 — 真 input 战斗测试 (RobotPlayer 驱动)
 ##
-## 修真 V2.3 combat_battle: 不再 teleport + Geometry2D overlap 模拟攻击
-## 修真: 用 RobotPlayer 真按 attack, Player 真读 Input, 真放 HitBox
-## 修真: Boss 真检测 Player 在 HurtBox 里 → take_damage
+## 修复 V2.3 combat_battle: 不再 teleport + Geometry2D overlap 模拟攻击
+## 修复: 用 RobotPlayer 真按 attack, Player 真读 Input, 真放 HitBox
+## 修复: Boss 真检测 Player 在 HurtBox 里 → take_damage
 ##
-## 必须修真后 V2.3 测试也仍然通过 (向后兼容)
+## 必须修复后 V2.3 测试也仍然通过 (向后兼容)
 
 const TestFramework = preload("res://tests/test_framework.gd")
 const RobotPlayer = preload("res://scripts/testing/RobotPlayer.gd")
@@ -90,7 +90,7 @@ func _test_chapter_real_input(ch: int) -> Dictionary:
 		await _cleanup_scene()
 		return {"pass": false, "message": "Boss '%s' 未找到" % boss_name}
 
-	# 锁 Boss 不动 (修真真实测试时 Boss 会自己动, 这里只验证战斗链路)
+	# 锁 Boss 不动 (修复真实测试时 Boss 会自己动, 这里只验证战斗链路)
 	boss.set_physics_process(false)
 	var detection = boss.get_node_or_null("PlayerDetectionZone")
 	if detection:
@@ -99,7 +99,7 @@ func _test_chapter_real_input(ch: int) -> Dictionary:
 	# 设置 Robot Player 追踪
 	_robot.set_player(player)
 
-	# 玩家无敌 (修真只验证攻击链路, 不修真 Boss 攻击模式)
+	# 玩家无敌 (修复只验证攻击链路, 不修复 Boss 攻击模式)
 	var hurt_box = player.get_node_or_null("HurtBox")
 	if hurt_box:
 		hurt_box.invulnerable = true
@@ -127,11 +127,11 @@ func _test_chapter_real_input(ch: int) -> Dictionary:
 
 	# === 真 input 战斗 ===
 	# 每轮:
-	#   - 修真位置到 overlap 范围
-	#   - 修真面向 Boss
-	#   - RobotPlayer.attack() (修真真按 attack)
+	#   - 修复位置到 overlap 范围
+	#   - 修复面向 Boss
+	#   - RobotPlayer.attack() (修复真按 attack)
 	#   - 等 Boss.hp 变化
-	#   - 修真离开 overlap (后撤)
+	#   - 修复离开 overlap (后撤)
 	var hits := 0
 	var last_hp: int = boss_stats.health
 	print("    [Ch%d] Boss 初始 HP: %d, RobotPlayer 开始真 input 攻击" % [ch, initial_boss_hp])
@@ -145,14 +145,14 @@ func _test_chapter_real_input(ch: int) -> Dictionary:
 	while iter < max_iterations and not _timed_out() and not chapter_watchdog_hit:
 		iter += 1
 
-		# 修真玩家位置到 overlap 范围
+		# 修复玩家位置到 overlap 范围
 		player.global_position = boss_pos + Vector2(-25, 0)
 		player.facing = 1
 		player.sprite.scale.x = 1
 		player.hitbox_pivot.scale.x = 1
 		await get_tree().physics_frame
 
-		# 真 input 攻击 (修真真按 attack, Player._read_input 读到, _change_state(ATTACK))
+		# 真 input 攻击 (修复真按 attack, Player._read_input 读到, _change_state(ATTACK))
 		await _robot.attack(1)
 
 		# 等物理帧, 让 HitBox 真碰到 HurtBox, Boss take_damage
@@ -169,11 +169,11 @@ func _test_chapter_real_input(ch: int) -> Dictionary:
 		if boss_stats.health <= 0:
 			break
 
-		# 后撤 (修真下次能正常攻击)
+		# 后撤 (修复下次能正常攻击)
 		player.global_position = boss_pos + Vector2(-200, 0)
 		await get_tree().physics_frame
 
-	# === 修真结果 ===
+	# === 修复结果 ===
 	var final_hp = boss_stats.health
 	var boss_killed_flag := false
 	if _current_scene and "boss_killed" in _current_scene:
