@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# .githooks/pre-commit — git commit 时自动检测 trigger word
+# 由 scripts/install_hooks.sh 安装 (通过 git config core.hooksPath)
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SCRIPT="$REPO_ROOT/scripts/check_trigger_word.sh"
+
+if [[ ! -f "$SCRIPT" ]]; then
+  echo "❌ 找不到 $SCRIPT"
+  echo "   请确认 scripts/check_trigger_word.sh 存在"
+  exit 1
+fi
+
+# 白名单：检测工具自身文件必须含 trigger word 才能工作
+# 如果 hook 把它们也挡了，工具自己都无法 commit
+EXCLUDE="scripts/check_trigger_word.sh,scripts/install_hooks.sh,.githooks/pre-commit,.github/workflows/trigger-word-guard.yml"
+
+echo "🪝 pre-commit hook: 检查 trigger word ..."
+bash "$SCRIPT" staged --exclude "$EXCLUDE"

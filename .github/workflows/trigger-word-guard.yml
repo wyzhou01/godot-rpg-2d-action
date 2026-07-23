@@ -1,0 +1,66 @@
+name: Trigger Word Guard
+
+# 检测 push / PR 的 commit message 和 diff 里是否含 trigger word (修真)
+# 修真 在 agent runtime 里会触发 'Agent couldn't generate a response' 卡死
+# 一旦检测到立即 fail
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  guard:
+    name: Check for trigger words
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0 = fetch 完整历史，否则 git diff origin/main 失败
+          fetch-depth: 0
+
+      - name: Setup git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Detect base ref
+        id: base
+        run: |
+          # PR: 比较当前 PR commit 跟 origin/main
+          # push: 比较 HEAD 跟 origin/main
+          if git rev-parse --verify origin/main >/dev/null 2>&1; then
+            echo "base=origin/main" >> "$GITHUB_OUTPUT"
+          else
+            # 首次 push (新分支) 或 fork PR: 没 origin/main 可比
+            # 退化为检查 HEAD 自身
+            echo "base=HEAD" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run trigger word check
+        run: |
+          if [[ "${{ steps.base.outputs.base }}" == "HEAD" ]]; then
+            echo "⚠️  没有 origin/main 可比较，仅检查 HEAD 自身 commit"
+            # 用 staged 模式，但实际是检查 HEAD commit message
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+            if echo "$COMMIT_MSG" | grep -qF "修真"; then
+              echo "❌ TRIGGER WORD '修真' found in HEAD commit message:"
+              echo "$COMMIT_MSG" | grep -nF "修真" | head -5
+              exit 1
+            fi
+            echo "✅ 无 trigger word"
+          else
+            bash scripts/check_trigger_word.sh diff origin/main
+          fi
+
+      - name: Summary on failure
+        if: failure()
+        run: |
+          echo "================================================"
+          echo "🚫 Trigger word 检测失败"
+          echo ""
+          echo "修真 是 agent runtime 的禁词，会触发卡死错误。"
+          echo "请改用同义词：修复 / 修订 / 调整 / 完善"
+          echo ""
+          echo "本地验证："
+          echo "  bash scripts/check_trigger_word.sh diff origin/main"
+          echo "================================================"

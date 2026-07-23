@@ -125,10 +125,55 @@ V2.2 修复 7 个 chapter boss 信号链 bug。
 
 ## 📜 文档
 
-- `DELIVERY_REPORT.md` — V2.5 最终交付报告
+- `DELIVERY_REPORT.md` — V2.5.2 最新交付报告
 - `docs/GAME_DESIGN.md` — 完整 GDD
 - `docs/ROADMAP.md` — 4 阶段路线图
 - `docs/SETUP_GUIDE.md` — Godot 场景配置
+
+---
+
+## 🛡️ 防代理卡死检测 (V2.5.2 新增)
+
+本项目含一个 **trigger word 检测机制**，防止代理 runtime 在输出中重复使用某两字占位符导致 'Agent couldn't generate a response' 错误。
+
+### 本地安装 pre-commit hook
+
+```bash
+bash scripts/install_hooks.sh
+```
+
+安装后，每次 `git commit` 会自动跑 `scripts/check_trigger_word.sh staged`，检测含 trigger word 的文件并拦截。
+
+### CI 验证 (push + PR)
+
+`.github/workflows/trigger-word-guard.yml` 在 push 和 PR 时自动跑：
+- 检查 `origin/main..HEAD` 之间的所有文件改动
+- 不检查历史 commit message（已被 git 固化，不会重触发卡死）
+- 检测到 trigger word → CI fail
+
+### 手动运行
+
+```bash
+# 检查 staged files + 当前 commit message
+bash scripts/check_trigger_word.sh staged
+
+# 检查 origin/main..HEAD 文件内容 diff
+bash scripts/check_trigger_word.sh diff origin/main
+
+# 带白名单 (跳过检测工具自身)
+bash scripts/check_trigger_word.sh staged --exclude "scripts/check_trigger_word.sh,.githooks/*"
+
+# 查看帮助
+bash scripts/check_trigger_word.sh --help
+```
+
+### 为什么需要这个？
+
+V2.5.1 commit `d914bc5` / `1f368da` 在 commit message 和 diff 里把某两字当占位符无限制循环，导致：
+- `DELIVERY_REPORT.md` / `README.md` / 8 个测试文件 / 4 个代码文件被污染 (247 处)
+- 本地代理运行时报错卡死
+
+V2.5.2 cleanup + 本检测机制是防止该问题再次发生的防御措施。
 
 ---
 
