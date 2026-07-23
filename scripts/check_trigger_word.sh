@@ -112,16 +112,26 @@ if [[ "$MODE" == "staged" ]]; then
     done
   done
 
-  # 2. 检查待提交 commit message（通过 .git/COMMIT_EDITMSG 或 -m 参数）
+  # 2. 检查待提交 commit message
+  #
+  # 重要逻辑：仅当 staged files 非空时才检查 COMMIT_EDITMSG
+  # 原因：`git commit --amend -m "..."` 时 .git/COMMIT_EDITMSG 仍是上一次
+  #       commit 的 message (不是用户新写的)，会误报。
+  # 如果 staged files 为空 说明是纯 amend message，不需要检查 COMMIT_EDITMSG。
   COMMIT_MSG=""
-  if [[ -f "${GIT_DIR:-.git}/COMMIT_EDITMSG" ]]; then
-    COMMIT_MSG=$(cat "${GIT_DIR:-.git}/COMMIT_EDITMSG")
-  elif commit_msg=$(git log -1 --pretty=%B 2>/dev/null); then
-    # 兜底：检查上一次 commit（pre-commit hook 时已 commit 但 message 还没固化时）
-    COMMIT_MSG="$commit_msg"
+  if [[ -n "$STAGED_FILES" ]]; then
+    # 有 staged files：检查 COMMIT_EDITMSG (这是 git 即将提交的新 message)
+    if [[ -f "${GIT_DIR:-.git}/COMMIT_EDITMSG" ]]; then
+      COMMIT_MSG=$(cat "${GIT_DIR:-.git}/COMMIT_EDITMSG")
+    fi
+  else
+    # 无 staged files: 跳过 COMMIT_EDITMSG (可能是 amend 或其他操作)
+    echo "ℹ️  无 staged files，跳过 commit message 检查 (避免误报 amend 残留)"
   fi
   for word in "${TRIGGER_WORDS[@]}"; do
-    check_word_in_string "$word" "$COMMIT_MSG" "commit message"
+    if [[ -n "$COMMIT_MSG" ]]; then
+      check_word_in_string "$word" "$COMMIT_MSG" "commit message"
+    fi
   done
 
 elif [[ "$MODE" == "diff" ]]; then
